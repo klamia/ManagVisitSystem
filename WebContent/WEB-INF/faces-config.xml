@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<faces-config version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+
+	<application>
+		<locale-config>
+			<default-locale>fr</default-locale>
+			<supported-locale>fr</supported-locale>
+			<supported-locale>en</supported-locale>
+		</locale-config>
+		<resource-bundle>
+			<base-name>i18n.msg</base-name>
+			<var>msg</var>
+		</resource-bundle>
+		<message-bundle>i18n.msg</message-bundle>
+	</application>
+
+	<application>
+		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+		<action-listener>org.primefaces.application.DialogActionListener</action-listener>
+		<navigation-handler>org.primefaces.application.DialogNavigationHandler</navigation-handler>
+		<view-handler>org.primefaces.application.DialogViewHandler</view-handler>
+	</application>
+
+  <lifecycle>
+  <phase-listener>
+     dz.cerist.mesrs.web.util.AjaxLoginListener
+   </phase-listener>
+   </lifecycle>
+  
+  
+  
+  <navigation-rule> 
+  <from-view-id>/public/login.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>home</from-outcome>
+   <to-view-id>/protected/home.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule> 
+  <from-view-id>/public/login.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>adhome</from-outcome>
+   <to-view-id>/admin/home.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+  <navigation-rule> 
+  <from-view-id>/public/login.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>subscribe</from-outcome>
+   <to-view-id>/public/subscribe.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule> 
+  <from-view-id>/public/login.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>forgotPassword</from-outcome>
+   <to-view-id>/public/forgotPassword.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <from-view-id>/public/resetPassword.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>logout</from-outcome>
+   <to-view-id>/public/login.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+  <navigation-rule>
+  <from-view-id>/protected/*</from-view-id>
+  <navigation-case>
+   <from-outcome>logout</from-outcome>
+   <to-view-id>/public/login.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+  <navigation-rule>
+  <from-view-id>/public/*</from-view-id>
+  <navigation-case>
+   <from-outcome>logout</from-outcome>
+   <to-view-id>/public/login.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+
+ <navigation-rule>
+  <from-view-id>/admin/*</from-view-id>
+  <navigation-case>
+   <from-outcome>logout</from-outcome>
+   <to-view-id>/public/login.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <from-view-id>/admin/*</from-view-id>
+  <navigation-case>
+   <from-outcome>home</from-outcome>
+   <to-view-id>/admin/home.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+  <navigation-rule>
+  <from-view-id>/admin/*</from-view-id>
+  <navigation-case>
+   <from-outcome>usr</from-outcome>
+   <to-view-id>/admin/users.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+
+<navigation-rule>
+  <from-view-id>/admin/*</from-view-id>
+  <navigation-case>
+   <from-outcome>edit</from-outcome>
+   <to-view-id>/admin/editUser.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule>
+  <from-view-id>/admin/*</from-view-id>
+  <navigation-case>
+   <from-outcome>dtl</from-outcome>
+   <to-view-id>/admin/userDetails.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+  <navigation-rule> 
+  <from-view-id>/protected/*</from-view-id>
+  <navigation-case>
+   <from-outcome>myRDV</from-outcome>
+   <to-view-id>/protected/rdv/myRdv.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule> 
+  <from-view-id>/protected/*</from-view-id>
+  <navigation-case>
+   <from-outcome>home</from-outcome>
+   <to-view-id>/protected/home.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule> 
+  <from-view-id>/protected/*</from-view-id>
+  <navigation-case>
+   <from-outcome>profile</from-outcome>
+   <to-view-id>/protected/profile.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+  
+  <navigation-rule> 
+  <from-view-id>/protected/*</from-view-id>
+  <navigation-case>
+   <from-outcome>rdv</from-outcome>
+   <to-view-id>/protected/rdv/newRdv.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+  <navigation-rule> 
+  <from-view-id>/protected/rdv/myRdv.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>listRDV</from-outcome>
+   <to-view-id>/protected/rdv/listeRDV.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule> 
+  <from-view-id>/protected/*</from-view-id>
+  <navigation-case>
+   <from-outcome>myVisits</from-outcome>
+   <to-view-id>/protected/visit/myVisits.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule> 
+  <from-view-id>/protected/*</from-view-id>
+  <navigation-case>
+   <from-outcome>visit</from-outcome>
+   <to-view-id>/protected/visit/newVisit.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule> 
+  <from-view-id>/protected/visit/myVisits.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>visitsList</from-outcome>
+   <to-view-id>/protected/visit/visitsList.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ 
+ <navigation-rule> 
+  <from-view-id>/protected/*</from-view-id>
+  <navigation-case>
+   <from-outcome>visitRequests</from-outcome>
+   <to-view-id>/protected/request/myVisitRequests.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule> 
+  <from-view-id>/protected/*</from-view-id>
+  <navigation-case>
+   <from-outcome>addRequest</from-outcome>
+   <to-view-id>/protected/request/newRequest.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ <navigation-rule> 
+  <from-view-id>/protected/request/myVisitRequests.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>listRequest</from-outcome>
+   <to-view-id>/protected/request/requestsVisitList.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+ 
+ 
+ <navigation-rule> 
+  <from-view-id>/protected/profile.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>edit</from-outcome>
+   <to-view-id>/protected/editProfile.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+
+<navigation-rule>
+  <from-view-id>/public/subscribe.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>success</from-outcome>
+   <to-view-id>/public/success.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+
+<navigation-rule>
+  <from-view-id>/public/forgotPassword.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>confirmation</from-outcome>
+   <to-view-id>/public/confirmation.xhtml</to-view-id>
+   <redirect/>
+  </navigation-case>
+ </navigation-rule>
+
+</faces-config>

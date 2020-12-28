@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:b="http://bootsfaces.net/ui"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces">
+
+<ui:composition>
+	<h:form>
+		<b:navBar fluid="true"
+			brandImg="#{request.contextPath}/images/logos.png"
+			brandImgStyleClass="logo" style-class="hidden-xs menu">
+
+			<b:navbarLinks>
+				<b:navLink value="#{msg.home}" outcome="home"></b:navLink>
+				<b:navLink value="#{msg.users}" outcome="usr"></b:navLink>
+				<b:navLink value="#{msg.profile}" href="#"></b:navLink>
+			</b:navbarLinks>
+
+			<b:navbarLinks pull="right">
+				<li><span>Bonjour #{request.userPrincipal.name}</span></li>
+				<b:navCommandLink icon-awesome="sign-out" iconSize="2x"
+					tooltip="#{msg.logout}" action="#{loginBean.logout}"></b:navCommandLink>
+			</b:navbarLinks>
+		</b:navBar>
+
+		<b:navBar fluid="true" style-class="visible-xs" inverse="true">
+
+			<b:navbarLinks>
+				<b:navLink value="#{msg.home}" href="#"></b:navLink>
+				<b:navLink value="#{msg.users}" href="#"></b:navLink>
+				<b:navLink value="#{msg.profile}" href="#"></b:navLink>
+				<b:navLink outcome="logout" icon-awesome="sign-out" iconSize="2x"></b:navLink>
+			</b:navbarLinks>
+		</b:navBar>
+
+	</h:form>
+</ui:composition>
+</html>

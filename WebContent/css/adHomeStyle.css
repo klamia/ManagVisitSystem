@@ -1,0 +1,50 @@
+@CHARSET "UTF-8";
+
+.first-row {
+	/*padding-top: 6em;*/
+}
+
+
+.row-container{
+	margin-top: 2em;
+	margin-left:1em;
+	margin-right:1em;
+}
+.chart {
+	border: solid 1px #eeeeee;
+	background-color: #fff;
+	border-radius: 5px;
+	-moz-box-shadow: 2px 2px 3px 2px #c3c4cd;
+	-webkit-box-shadow: 2px 2px 3px 2px #c3c4cd;
+	box-shadow: 2px 2px 3px 2px #c3c4cd;
+}
+
+
+.numbers {
+	border: solid 1px #eeeeee;
+	background-color: #fff;
+	border-radius: 5px;
+	height:100px;
+}
+
+.num-icon{
+	background-color:#464866;
+	height:100%;
+	color:#c3c4cd;
+	text-align:center;
+	padding-top:25px;
+	font-size:36px;
+}
+
+.num-content{
+	color:#464866;
+	text-transform: uppercase;
+	border-top: solid 2px #2E9CCA;
+	
+}
+
+.num-content p{
+	color:#2E9CCA;
+	font-weight:bold;
+	font-size:24px;
+}

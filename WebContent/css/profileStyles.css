@@ -1,0 +1,39 @@
+@CHARSET "UTF-8";
+
+.profile-box{
+	border:1px solid #e7e7e7;
+	min-height:100px;
+	margin-left:5em;
+	margin-right:5em;
+	border-radius:5px;
+	box-shadow: 0 1px 2px #aaabb8;
+	background-color:#f8f8f8;
+	
+}
+
+.titlelabels{
+	color:#444444;
+	font-size:24px;
+	font-style:italic;
+}
+
+.labels{
+	color:#2E9CCA;
+	font-style:italic;
+}
+
+.infoLabels{
+	font-weight:normal !important;
+}
+
+.profile-content{
+	border-left:1px solid #e7e7e7;
+}
+
+ @media screen and (max-width: 767px) {
+    .profile-box{
+	margin-left:1em;
+	margin-right:1em;
+	
+    }
+    }

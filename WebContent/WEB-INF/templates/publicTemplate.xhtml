@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="#{localeBean.language}" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:b="http://bootsfaces.net/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces">
+<f:view locale="#{localeBean.locale}">
+	<h:head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Visitors management</title>
+		
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/loginStyles.css" />
+	
+	</h:head>
+	<h:body>
+		<b:container style="padding:0;" fluid="true">
+
+			<b:row styleClass="hidden-xs">
+				<b:column col-xs="12" col-sm="12" col-md="12" id="header"
+					style="width:100%;">
+					<p:graphicImage  value="/images/logo.jpg"
+						style="width: 100%;" />
+				</b:column>
+			</b:row>
+
+			<b:row>
+				<b:column col-xs="12" col-sm="4" offset-sm="4" col-md="4"
+					offset-md="4">
+					<ui:insert name="loginBox">
+						<div class="login-box">
+							<div class="login-header">
+								<p:graphicImage value="/images/logos.png" />
+							</div>
+							<div class="login-content">
+								<ui:insert name="box-content">Insert your content here</ui:insert>
+							</div>
+							<!-- login-content -->
+						</div>
+					</ui:insert>
+					<!--login-box-->
+				</b:column>
+			</b:row>
+
+		</b:container>
+		<!-- container -->
+
+	</h:body>
+</f:view>
+</html>

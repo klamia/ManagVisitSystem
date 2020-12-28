@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/WEB-INF/templates/publicTemplate.xhtml"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces">
+
+	
+	<ui:define name="box-content">
+     
+		<h:form>
+			<p:growl id="growl" sticky="false" life="3000"  showDetail="true" />
+			<b:row >
+				<b:row colSm="12" colXs="12" style="margin:0;">
+					<b:column colSm="4" colXs="12">
+						<h:outputLabel for="nom" value="Nom : * " />
+					</b:column>
+					<b:column colSm="8" colXs="12">
+						<b:inputText id="nom" placeholder="Votre nom en majuscule"
+							required="true" style="color:black;"
+							value="#{subscribeView.user.nom}"
+							requiredMessage="Champ obligatoire:Vous devez indiquez une valeur"
+							validatorMessage="Le nom entré ne correspond pas au format suivant: AAA AAA ou AAA-AAA ou AAA'AAA ">
+							<f:ajax event="blur" render="nomMessage" />
+							<f:validateRegex
+								pattern="^[A-ZÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ]+[\ \-\']?[A-ZÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ]+$" />
+						</b:inputText>
+					</b:column>
+				</b:row>
+				<b:row colSm="10" colXs="12" style="margin-top:0;">
+					<b:message id="nomMessage" for="nom"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;" />
+				</b:row>
+			</b:row>
+			
+			<b:row>
+				<b:row colSm="12" colXs="12" style="margin:0;">
+					<b:column colSm="4" colXs="12">
+						<h:outputLabel for="prenom" value="Prenom : * " />
+					</b:column>
+					<b:column colSm="8" colXs="12">
+						<b:inputText id="prenom" style="color:black;"
+							placeholder="1ere lettre en majuscule" required="true"
+							requiredMessage="Champ obligatoire:Vous devez indiquez une valeur"
+							value="#{subscribeView.user.prenom}"
+							validatorMessage="Le prenom entré ne correspond pas au format suivant: Xxx xxx ou Xxx-xxx ou Xxx'xxx ">
+							<f:ajax event="blur" render="prenomMessage" />
+							<f:validateRegex
+								pattern="^[A-Z]{1}[a-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+[\ \-\']?[a-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿA-Z]+$" />
+						</b:inputText>
+					</b:column>
+				</b:row>
+				<b:row colSm="12" colXs="12">
+					<b:message id="prenomMessage" for="prenom"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;" />
+				</b:row>
+			</b:row>
+			
+			<b:row>
+				<b:row colSm="12" colXs="12" style="margin:0;">
+					<b:column colSm="4" colXs="12" >
+						<h:outputLabel for="fonction" value="Fonction : * " />
+					</b:column>
+					<b:column colSm="8" colXs="12">
+						<b:selectOneMenu id="fonction" required="true" style="color:black;"
+							value="#{subscribeView.user.fonction}"
+							requiredMessage="Champ obligatoire:Vous devez indiquez une valeur">
+							<f:selectItem itemLabel="(Selectionnez Fonction )" itemValue="" />
+							<f:selectItem itemLabel="Ministre" itemValue="Ministre" />
+							<f:selectItem itemLabel="Secrétaire Général"
+								itemValue="Secrétaire Général" />
+							<f:selectItem itemLabel="Chef de Cabine"
+								itemValue="Chef de Cabinet" />
+							<f:selectItem itemLabel="Inspecteur Général"
+								itemValue="Inspecteur Général" />
+							<f:selectItem itemLabel="Agent de sécurité"
+								itemValue="Agent de sécurité" />
+							<f:selectItem itemLabel="Agent de réception"
+								itemValue="Agent de réception" />
+							<f:ajax event="blur" render="fonctionMessage" />
+						</b:selectOneMenu>
+					</b:column>
+				</b:row>
+				<b:row colSm="12" colXs="12">
+					<b:message id="fonctionMessage" for="fonction"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;" />
+				</b:row>
+			</b:row>
+
+			<b:row>
+				<b:row colSm="12" colXs="12" style="margin:0;">
+					<b:column colSm="4" colXs="12">
+						<h:outputLabel for="dept" value="Département:* " />
+					</b:column>
+					<b:column colSm="8" colXs="12">
+						<b:selectOneMenu id="dept" required="true" style="color:black;"
+							value="#{subscribeView.user.departement}"
+							requiredMessage="Champ obligatoire:Vous devez indiquez une valeur">
+							<f:selectItem itemLabel="(Selectionnez Département )"
+								itemValue="" />
+							<f:selectItem  itemLabel="Secrétariat Générale"
+								itemValue="Secrétariat Générale" />
+							<f:selectItem  itemLabel="Cabinet" itemValue="Cabinet" />
+							<f:selectItem   itemLabel="Inspection Générale"
+								itemValue="Inspection Générale" />
+							<f:selectItem  itemLabel="Poste de Sécurité"
+								itemValue="Poste de Sécurité" />
+							<f:selectItem  itemLabel="Poste de Réception"
+								itemValue="Poste de Réception" />
+							<f:ajax event="blur" render="deptMessage" />
+						</b:selectOneMenu>
+					</b:column>
+				</b:row>
+				<b:row colSm="12" colXs="12">
+					<b:message id="deptMessage" for="dept"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;" />
+				</b:row>
+			</b:row>
+
+			<b:row>
+				<b:row colSm="12" colXs="12" style="margin:0;">
+					<b:column colSm="4" colXs="12">
+						<h:outputLabel for="email" value="Email : * " />
+					</b:column>
+					<b:column colSm="8" colXs="12">
+						<b:inputText id="email" placeholder="Votre email professionnel" style="color:black;"
+							required="true" value="#{subscribeView.user.email}"
+							requiredMessage="Champ obligatoire:Vous devez indiquez une valeur"
+							validatorMessage="L'adresse email entrée n'est pas valide">
+							<f:ajax event="blur" render="emailMessage" />
+							<f:validateRegex
+								pattern="^[a-z]{2,}[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$" />
+						    <f:validator binding="#{emailExistsValidator}" />
+						</b:inputText>
+					</b:column>
+				</b:row>
+				<b:row colSm="12" colXs="12">
+					<b:message id="emailMessage" for="email"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;" />
+				</b:row>
+			</b:row>
+
+			<b:row>
+
+				<b:row colSm="12" colXs="12" style="margin:0;">
+					<b:column colSm="4" colXs="12">
+						<h:outputLabel for="login" value=" Login : * " />
+					</b:column>
+					<b:column colSm="8" colXs="12">
+						<b:inputText id="login"  required="true" style="color:black;"
+							value="#{subscribeView.user.login}"
+							requiredMessage="Champ obligatoire:Vous devez indiquez une valeur">
+							<f:ajax event="blur" render="loginMessage" />
+						<f:validator binding="#{usernameExistsValidator}" />
+						</b:inputText>
+					</b:column>
+				</b:row>
+				<b:row colSm="12" colXs="12">
+					<b:message id="loginMessage" for="login"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;" />
+				</b:row>
+			</b:row>
+
+			<b:row>
+				<b:row colSm="12" colXs="12"  style="margin:0;" >
+					<b:column colSm="4" colXs="12">
+						<h:outputLabel for="password" value=" Mot de passe:* " />
+					</b:column>
+					<b:column colSm="8" colXs="12">
+						<b:inputSecret tooltip="le mot de passe doit comporter au moins 8 caractères et ne dépassant pas 10 caractères,  dont une lettre majuscule, une miniscule, un chiffre et un caractère spécial: (@,!,#,$,%,=,:,?)" 
+						id="password" value="#{subscribeView.password}" style="color:black;"
+							required="true" 
+							requiredMessage="Champ obligatoire:Vous devez indiquez une valeur">
+							
+							<f:attribute name="compareTo" value="#{compareTo}" />
+							<f:ajax event="blur" render="pwdMessage" />
+						</b:inputSecret>
+					</b:column>
+				</b:row>
+				<b:row colSm="12" colXs="12">
+					<b:message id="pwdMessage" for="password"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;" />
+				</b:row>
+			</b:row>
+			<b:row>
+				<b:row colSm="12" colXs="12" style="margin:0;" >
+					<b:column colSm="4" colXs="12">
+						<h:outputLabel for="confirmPassword" value=" Mot de passe:* " />
+					</b:column>
+					<b:column colSm="8" colXs="12">
+						<b:inputSecret id="confirmPassword" required="true"  style="color:black;"
+							value="#{subscribeView.confirmPassword}"
+							placeholder="Confirmer mot de passe" binding="#{compareTo}"
+							requiredMessage="Champ obligatoire:Vous devez indiquez une valeur">
+							<f:ajax event="blur" render="pwd2Message" />
+						</b:inputSecret>
+					</b:column>
+				</b:row>
+				<b:row colSm="12" colXs="12">
+					<b:message id="pwd2Message" for="confirmPassword"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;" />
+				</b:row>
+			</b:row>
+
+			<b:row>
+				<b:row colSm="12" colXs="12" style="margin:0;" >
+					<b:column colSm="5" colXs="12">
+						<b:inputText name="jcaptcha" id="captcha"
+							placeholder="Saisissez le texte de l'image" required="true" style="color:black;"
+							requiredMessage="Champ obligatoire:Vous devez indiquez une valeur">
+							<f:validator
+								binding="#{captchaValidator}" />
+						</b:inputText>
+					</b:column>
+					<b:column colSm="7" colXs="12">
+						<img src="jcaptcha.jpg" />
+					</b:column>
+				</b:row>
+				<b:row colSm="12" colXs="12">
+					<b:message id="captchaMessage" for="captcha"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;" />
+				</b:row>
+			</b:row>
+			
+			<b:row>
+				<b:commandButton value="OK" col-md="6" col-sm="6" col-xs="12"
+					action="#{subscribeView.saveUser()}" style="margin-bottom:10px; " />
+				<b:button value="Annuler" col-md="6" col-sm="6" col-xs="12" 
+					outcome="login"></b:button>
+			</b:row>
+		</h:form>
+	</ui:define>
+</ui:composition>

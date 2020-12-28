@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/WEB-INF/templates/template.xhtml"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces"
+	xmlns:sec="http://www.springframework.org/security/tags" >
+
+	<ui:define name="styleCss">
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/globalStyles.css" />
+	</ui:define>
+	<ui:define name="title">Rendez-Vous</ui:define>
+	<ui:define name="content">
+		<b:form>
+			<p:growl id="growl" sticky="false" life="4000" escape="true" />
+			<b:button value="#{msg.newRdv}" iconAwesome="plus" outcome="rdv"
+				style="margin-left:5px; margin-bottom:5px;"
+				rendered="#{sec:areAnyGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')}">
+			</b:button>
+			<b:button value="#{msg.consultRdv}" iconAwesome="list-alt"
+				outcome="listRDV" style="margin-left:10px; margin-bottom:5px;"
+				rendered="#{sec:areAnyGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')}">
+			</b:button>
+			<h1 style="text-align: center">Liste des Rendez-Vous en cours</h1>
+
+			<b:dataTable id="rdvTable" lang="#{localeBean.language}"
+				fixedHeader="true" responsive="true" value="#{rdvsView.allRdv}"
+				var="rdv" scroll-size="400px" scroll-x="false"
+				rowStyleClass="#{rdv.etat == 'En Attente' ? 'standBy' : null} #{rdv.etat == 'En Cours' ? 'onProcess' : null}"  >
+				
+
+
+				<b:dataTableColumn label="Nom Visiteur "
+					labelStyleClass="table-labels" value="#{rdv.nomVisiteur}" />
+				<b:dataTableColumn label="Prenom " labelStyleClass="table-labels"
+					value="#{rdv.prenomVisiteur}" />
+				<b:dataTableColumn label="Date Rendez-Vous" order="asc"
+					style="text-align:center;" labelStyleClass="table-labels"
+					value="#{rdv.dateRdv}">
+					
+				</b:dataTableColumn>
+				<b:dataTableColumn label="Heure" order="asc"
+					style="text-align:center;" labelStyleClass="table-labels"
+					value="#{rdv.heureRdv}" />
+				<b:dataTableColumn label="Etat" labelStyleClass="table-labels"
+					style="text-align:center;" value="#{rdv.etat}"
+					contentStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')? 'hidden': null}"
+					headerStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')? 'hidden': null}" />
+				<b:dataTableColumn label="Visibilité" labelStyleClass="table-labels"
+					style="text-align:center;" value="#{rdv.visibilite}"
+					contentStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')? 'hidden': null}"
+					headerStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')? 'hidden': null}" />
+
+
+
+				<b:dataTableColumn label="Editer"
+					style="text-align:center; color:#2E9CCA; "
+					contentStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE') ? 'hidden': null}"
+					headerStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')? 'hidden': null}"
+					orderable="false">
+
+					<b:commandButton iconAwesome="edit" look="primary"
+						actionListener="#{rdvsView.editRDV(rdv)}"
+						oncomplete="PF('editRDVDialog').show()"
+						disabled="#{rdv.etat ne 'En Attente'}">
+						<f:ajax execute="@this" render="@form" />
+					</b:commandButton>
+				</b:dataTableColumn>
+
+				<b:dataTableColumn label="Supprimer"
+					style="text-align:center; color:#2E9CCA; " orderable="false"
+					contentStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')? 'hidden': null}"
+					headerStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')? 'hidden': null}">
+
+					<b:commandButton iconAwesome="trash" look="primary"
+						onclick="return confirmDelete();" process="@this" update="@form"
+						immediate="true" disabled="#{rdv.etat eq 'En Cours'}"
+						action="#{rdvsView.deleteRdv(rdvsView.allRdv.indexOf(rdv))}">
+
+					</b:commandButton>
+
+				</b:dataTableColumn>
+
+
+				<b:dataTableColumn label="Rendre Visible" orderable="false"
+					style="text-align:center; color:#2E9CCA; "
+					contentStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')? 'hidden': null}"
+					headerStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')? 'hidden': null}">
+
+					<b:commandButton iconAwesome="thumbs-up" look="primary"
+						action="#{rdvsView.updateVisible()}" update="@form" ajax="true"
+						immediate="true" disabled="#{rdv.visibilite eq 'true'}">
+						<f:setPropertyActionListener value="#{rdv}"
+							target="#{rdvsView.rdvVisible}" />
+					</b:commandButton>
+
+				</b:dataTableColumn>
+
+				<b:dataTableColumn label="Créer Visite" orderable="false"
+					style="text-align:center; color:#2E9CCA; "
+					contentStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_AGENT')? 'hidden': null} "
+					headerStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_AGENT')? 'hidden': null}">
+					<b:button look="primary" iconAwesome="plus" outcome="visit"
+						disabled="#{rdv.visibilite eq 'false' or rdv.hasVisit eq 'true' }">
+						<f:param name="page" value="myRDV"></f:param>
+						<f:param name="id" value="#{rdv.id}"></f:param>
+					</b:button>
+				</b:dataTableColumn>
+
+			</b:dataTable>
+
+
+			<p:dialog header="Modifier Rendez-Vous" widgetVar="editRDVDialog"
+				resizable="false" responsive="true" styleClass="popup-dialog">
+
+
+				<p:panelGrid style="margin-bottom:20px; border: none !important; ">
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="nomVisiteur" value="Nom Visiteur :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputText id="nomVisiteur" placeholder="nom en majuscule"
+								value="#{rdvsView.updatedRdv.nomVisiteur}" required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !"
+								validatorMessage="Le nom entré ne correspond pas au format suivant: AAA AAA ou AAA-AAA ou AAA'AAA ">
+								<f:ajax event="blur" render="nomMessage" />
+								<f:validateRegex
+									pattern="^[A-ZÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ]+[\ \-\']?[A-ZÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ]+$" />
+							</p:inputText>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message id="nomMessage" for="nomVisiteur" />
+						</p:column>
+					</p:row>
+
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="visitorFirstname" value="Prenom Visiteur :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputText id="visitorFirstname"
+								placeholder="1ere lettre en majuscule"
+								value="#{rdvsView.updatedRdv.prenomVisiteur}" required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !"
+								validatorMessage="Le prenom entré ne correspond pas au format suivant: Aaa aaa ou Aaa-aaa ou Xaa'aaa ">
+								<f:ajax event="blur" render="prenomMessage" />
+								<f:validateRegex
+									pattern="^[A-Z]{1}[a-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+[\ \-\']?[a-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿA-Z]+$" />
+							</p:inputText>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message id="prenomMessage" for="visitorFirstname" />
+						</p:column>
+					</p:row>
+
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="Date Rendez-Vous : *" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<b:dateTimePicker id="date"
+								value="#{rdvsView.updatedRdv.dateRdv}" show-time="false"
+								style="margin-bottom: 15px;" required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !"
+								minDate="moment().add(-20, 'd').toDate()"
+								maxDate="moment().add(20, 'd').toDate()" format="DD/MM/YYYY">
+								<f:ajax event="blur" render="dateMessage" />
+							</b:dateTimePicker>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message id="dateMessage" for="date" />
+						</p:column>
+					</p:row>
+
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="Heure Rendez-Vous: *" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<b:dateTimePicker id="time" value="#{rdvsView.rdvTime}"
+								show-date="false" style="margin-bottom: 15px;" required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !"
+								format="HH:mm" iconAwesome="clock-o">
+								<f:ajax event="blur" render="heureMessage" />
+							</b:dateTimePicker>
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:message id="heureMessage" for="time" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+				<f:facet name="footer">
+					<p:row style="border: none !important; ">
+
+						<p:column colspan="4" style="border: none !important;">
+							<p:commandButton action="#{rdvsView.updateRdv()}"
+								value="Enregistrer" oncomplete="closeDlg(xhr, status, args)"
+								style=" margin-right: 10px ; margin-left: 200px">
+								<f:ajax execute="@this" render="@form" />
+							</p:commandButton>
+						</p:column>
+
+						<p:column colspan="4" style="border: none !important;  ">
+							<p:button value="Annuler" dismiss="modal"
+								onclick="PF('editRDVDialog').hide()" />
+						</p:column>
+					</p:row>
+				</f:facet>
+			</p:dialog>
+
+		</b:form>
+		<script type="text/javascript">
+    function closeDlg(xhr, status, args) {
+        if(args.validationFailed ) {
+            PF('editRDVDialog').jq.effect("shake", {times:5}, 0);
+        }
+        else {
+            PF('editRDVDialog').hide();
+        }
+    }
+    </script>
+
+
+	</ui:define>
+</ui:composition>

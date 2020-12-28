@@ -1,0 +1,19 @@
+@CHARSET "UTF-8";
+
+
+#footer{
+	margin-top:0 !important;
+}
+
+.panel-group {
+    margin-bottom:0 !important;
+}
+
+.btn-panel{
+background-color:#e2e2e2 !important;
+border-left:0;
+border-right:0;
+border-radius:0 !important;
+padding-top:30px;
+padding-bottom:30px;	
+}

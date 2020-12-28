@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:lang="http://www.springframework.org/schema/lang"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+    	http://www.springframework.org/schema/security 
+		http://www.springframework.org/schema/security/spring-security-3.1.xsd
+      	http://www.springframework.org/schema/context 
+      	http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<beans:bean id="roleHierarchy"
+		class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+		<beans:property name="hierarchy">
+			<beans:value>
+
+				ROLE_ADMIN > ROLE_SUPERVISEUR
+				ROLE_SUPERVISEUR > ROLE_RESPONSABLE
+				ROLE_SUPERVISEUR > ROLE_RECEPTIONISTE
+				ROLE_SUPERVISEUR > ROLE_AGENT
+
+
+			</beans:value>
+		</beans:property>
+	</beans:bean>
+
+	<http auto-config="true" access-denied-page="/erreur403" >
+
+
+		<intercept-url pattern="/index.html*"
+			access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_SUPERVISEUR,ROLE_RESPONSABLE,ROLE_RECEPTIONISTE,ROLE_AGENT" />
+
+		<intercept-url pattern="/public/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_SUPERVISEUR,ROLE_RESPONSABLE,ROLE_RECEPTIONISTE,ROLE_AGENT" />
+
+		<intercept-url pattern="/WEB-INF/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_SUPERVISEUR,ROLE_RESPONSABLE,ROLE_RECEPTIONISTE,ROLE_AGENT" />
+
+		<intercept-url pattern="/images/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_SUPERVISEUR,ROLE_RESPONSABLE,ROLE_RECEPTIONISTE,ROLE_AGENT" />
+
+         <intercept-url pattern="/css/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY,ROLE_SUPERVISEUR,ROLE_RESPONSABLE,ROLE_RECEPTIONISTE,ROLE_AGENT" />
+		
+		<intercept-url pattern="/home*"
+			access="ROLE_SUPERVISEUR,ROLE_RESPONSABLE,ROLE_RECEPTIONISTE,ROLE_AGENT" />
+		<intercept-url pattern="/profile*"
+			access="ROLE_SUPERVISEUR,ROLE_RESPONSABLE,ROLE_RECEPTIONISTE,ROLE_AGENT" />
+		<intercept-url pattern="/myRDV*"
+			access="ROLE_SUPERVISEUR,ROLE_RESPONSABLE,ROLE_RECEPTIONISTE,ROLE_AGENT" />
+		<intercept-url pattern="/requests*"
+			access="ROLE_SUPERVISEUR,ROLE_RESPONSABLE,ROLE_RECEPTIONISTE,ROLE_AGENT" />
+		<intercept-url pattern="/myVisits*"
+			access="ROLE_SUPERVISEUR,ROLE_RESPONSABLE,ROLE_RECEPTIONISTE,ROLE_AGENT" />
+		<intercept-url pattern="/edituser*"
+			access="ROLE_SUPERVISEUR,ROLE_RESPONSABLE,ROLE_RECEPTIONISTE,ROLE_AGENT" />
+
+		<intercept-url pattern="/rdv*"
+			access="ROLE_SUPERVISEUR,ROLE_RESPONSABLE" />
+		<intercept-url pattern="/listRDV*"
+			access="ROLE_SUPERVISEUR,ROLE_RESPONSABLE" />
+
+		<intercept-url pattern="/adhome*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/edituser*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/adusr*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/changeusr*" access="ROLE_ADMIN" />
+		<intercept-url pattern="/dtlusr*" access="ROLE_ADMIN" />
+
+		<intercept-url pattern="/addRequest*" access="ROLE_SUPERVISEUR,ROLE_AGENT" />
+		<intercept-url pattern="/listRequest*"
+			access="ROLE_SUPERVISEUR,ROLE_RESPONSABLE" />
+
+		<intercept-url pattern="/visit*" access="ROLE_SUPERVISEUR,ROLE_AGENT" />
+		<intercept-url pattern="/visitsList*"
+			access="ROLE_SUPERVISEUR,ROLE_RESPONSABLE" />
+
+
+
+
+
+		<form-login login-page="/" 
+			authentication-success-handler-ref="myAuthenticationSuccessHandler" />
+		
+		<logout logout-success-url="/" delete-cookies="JSESSIONID" />
+		
+		
+
+
+	</http>
+
+	<beans:bean id="myAuthenticationSuccessHandler" 
+	class="dz.cerist.mesrs.security.MySimpleUrlAuthenticationSuccessHandler" />
+	
+	
+	<beans:bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<beans:property name="driverClassName"
+			value="${Mysql_driver.connection.driver_class}" />
+		<beans:property name="username"
+			value="${Mysql_driver.connection.username}" />
+		<beans:property name="password"
+			value="${Mysql_driver.connection.password}" />
+		<beans:property name="url" value="${Mysql_driver.connection.url}" />
+
+	</beans:bean>
+
+	<beans:bean
+		class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"
+		id="passwordEncoder">
+	</beans:bean>
+	<!-- <beans:bean id="databasePasswordSecurerBean" class="dz.com.naftal.petrocard.security.DatabasePasswordSecurerBean" 
+		init-method="encryptDBPassword" depends-on="dataSource"> <beans:property 
+		name="passwordEncoder" ref="passwordEncoder"></beans:property> <beans:property 
+		name="dataSource" ref="dataSource"></beans:property> <beans:property name="selectQuery"> 
+		<beans:value>SELECT username , password , enabled FROM petrocard.users </beans:value> 
+		</beans:property> <beans:property name="updateQuery"> <beans:value>UPDATE 
+		petrocard.users SET password = ? WHERE username = ? </beans:value> </beans:property> 
+		</beans:bean> -->
+
+	<authentication-manager>
+		<authentication-provider>
+		  	<password-encoder hash="md5" ref="passwordEncoder"></password-encoder> 
+			<jdbc-user-service data-source-ref="Mysql_driverDS"
+				users-by-username-query="
+					select login, password, enabled from visitorsdb.user u where enabled='1' and login=?"
+					
+				authorities-by-username-query="
+					select u.login, u.role from user u where u.login=?  " 
+								
+					/>
+		
+		</authentication-provider>
+	</authentication-manager>
+
+
+
+
+</beans:beans>

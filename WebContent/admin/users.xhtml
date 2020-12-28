@@ -1,0 +1,390 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/WEB-INF/templates/adminTemplate.xhtml"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces">
+
+	<ui:define name="styleCss">
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/usersStyle.css" />
+	</ui:define>
+	<ui:define name="title">Users</ui:define>
+	<ui:define name="content">
+
+		<b:row>
+			<h:form>
+
+				<b:growl id="growl" sticky="false" life="5000" escape="true" />
+				<b:column col-sm="3" col-md="2" styleClass="sidebar" col-xs="12">
+					<b:panel>
+						<b:inputText value="#{adminUsersView.loginId}"
+							placeholder="Rechercher ....">
+							<f:facet name="append">
+								<b:icon name="search" />
+							</f:facet>
+						</b:inputText>
+						<b:commandButton value="rechercher" icon="search" update="@form"
+							action="#{adminUsersView.searchUser(adminUsersView.loginId)}">
+
+						</b:commandButton>
+					</b:panel>
+					
+
+					<b:panel style="padding:0px;">
+						<b:listLinks style="text-align:left; font-size: 13px;   ">
+							<b:navLink value="Nouvel utilisateur" col-xs="12"></b:navLink>
+							<b:navCommandLink value="Tous les utilisateurs" col-xs="12"
+								action="#{adminUsersView.findAllUsers()}" update="@form"></b:navCommandLink>
+							<b:navCommandLink value="Utilisateurs en ligne"  col-xs="12"></b:navCommandLink>
+							<b:navCommandLink value="Utilisatreurs désactivés" col-xs="12"></b:navCommandLink>
+							<b:navCommandLink value="Utilisatreurs activés" col-xs="12"></b:navCommandLink>
+						</b:listLinks>
+					</b:panel>
+					<b:column col-sm="12" style="text-align:center;">
+						<p:ajaxStatus style="display:block;">
+							<f:facet name="start">
+								<p:graphicImage url="/images/ajaxLoading1.gif" />
+							</f:facet>
+						</p:ajaxStatus>
+					</b:column>
+				</b:column>
+
+				<b:column col-sm="9" offset-sm="3" col-md="10" offset="2"
+					styleClass="main" col-xs="12">
+
+					<p:dataTable value="#{adminUsersView.users}" var="user"
+						reflow="true" style="width:100%; font-size:11px;" rows="10" 
+						rowsPerPageTemplate="20,50,100" paginator="true"
+						widgetVar="usersTable" id="users">
+
+
+						<p:column headerText="Login ID ">
+							<h:outputText value="#{user.login}" />
+						</p:column>
+
+						<p:column headerText="Rôle">
+							<h:outputText value="#{user.role}" />
+						</p:column>
+
+						<p:column headerText="Activé" style="text-align:center;">
+							<p:graphicImage url="/images/yes.gif"
+								rendered="#{user.enabled}" />
+							<p:graphicImage url="/images/no.png"
+								rendered="#{!user.enabled}" />
+						</p:column>
+
+						<p:column headerText="Connecté" style="text-align:center;">
+							<p:graphicImage url="/images/online.png"
+								rendered="#{user.connecte}" />
+							<p:graphicImage url="/images/offline.png"
+								rendered="#{!user.connecte}" />
+						</p:column>
+
+						<p:column headerText="Dernière connexion">
+							<h:outputText value="#{user.dateDernConnex}" />
+						</p:column>
+
+						<p:column headerText="Activer"
+							style="text-align:center; color:#2E9CCA;">
+							<b:commandButton look="primary" iconAwesome="edit" update="growl"
+								disabled="#{user.enabled or user.role eq null }"
+								action="#{adminUsersView.enableUser()}">
+
+								<f:setPropertyActionListener value="#{user}"
+									target="#{adminUsersView.selectedUser}" />
+								<f:ajax execute="@this" render="@form" />
+							</b:commandButton>
+						</p:column>
+
+						<p:column headerText="Désactiver"
+							style="text-align:center; color:#2E9CCA;">
+							<b:commandButton look="primary" iconAwesome="edit"
+								disabled="#{!user.enabled}"  update="growl"
+								action="#{adminUsersView.desableUser()}">
+								<f:setPropertyActionListener value="#{user}"
+									target="#{adminUsersView.selectedUser}" />
+								<f:ajax execute="@this" render="@form" />
+							</b:commandButton>
+						</p:column>
+
+						<p:column headerText="Attribuer Role"
+							style="text-align:center; color:#2E9CCA;">
+
+							<b:commandButton look="primary"
+								oncomplete="PF('ajoutRoleDialog').show()" iconAwesome="plus"
+								disabled="#{user.role ne null }" >
+								<f:setPropertyActionListener value="#{user}"
+									target="#{adminUsersView.updatedUser}" />
+								<f:ajax execute="@this" render="@form" />
+							</b:commandButton>
+
+						</p:column>
+
+						<p:column headerText="Aperçu"
+							style="text-align:center; color:#2E9CCA;">
+
+							<b:commandButton immediate="true"
+								oncomplete="PF('showUserDialog').show()" look="primary"
+								iconAwesome="eye">
+								<f:setPropertyActionListener value="#{user}"
+									target="#{adminUsersView.selectedUser}" />
+								<f:ajax execute="@this" render="@form" />
+							</b:commandButton>
+
+						</p:column>
+
+						<p:column headerText="Supprimer"
+							style="text-align:center; color:#2E9CCA;">
+
+							<b:commandButton iconAwesome="trash" look="primary"
+								onclick="return confirmDelete();" process="@this" update="@form"
+								immediate="true" disabled=""
+								action="#{adminUsersView.deleteUser(adminUsersView.users.indexOf(user))}">
+
+							</b:commandButton>
+
+						</p:column>
+
+
+					</p:dataTable>
+
+
+
+				</b:column>
+
+				<p:dialog header="Aperçu Utilisateur" widgetVar="showUserDialog"
+					resizable="false" responsive="true"
+					style=" margin-top:20px; width:400px !important ; min-width:300px !important;  min-Y:70px !important; ">
+
+					<p:panelGrid style="margin-bottom:20px; border: none !important; ">
+
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Nom utilisateur: :"
+									styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{adminUsersView.selectedUser.nom}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Prénom utilisateur :"
+									styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{adminUsersView.selectedUser.prenom}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Fonction: " styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{adminUsersView.selectedUser.fonction}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Département :" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel
+									value="#{adminUsersView.selectedUser.departement}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Email:" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{adminUsersView.selectedUser.email}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Rôle:" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{adminUsersView.selectedUser.role}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Date de création:" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel
+									value="#{adminUsersView.selectedUser.dateCreation}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</p:outputLabel>
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Date dernière connxion:"
+									styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel
+									value="#{adminUsersView.selectedUser.dateDernConnex}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</p:outputLabel>
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Activé:" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<h:panelGroup>
+									<p:graphicImage url="/images/yes.gif"
+										rendered="#{adminUsersView.selectedUser.enabled}" />
+									<p:graphicImage url="/images/no.png"
+										rendered="#{!adminUsersView.selectedUser.enabled}" />
+								</h:panelGroup>
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Connecté:" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<h:panelGroup>
+									<p:graphicImage url="/images/online.png"
+										rendered="#{adminUsersView.selectedUser.connecte}" />
+									<p:graphicImage url="/images/offline.png"
+										rendered="#{!adminUsersView.selectedUser.connecte}" />
+								</h:panelGroup>
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+
+
+					</p:panelGrid>
+
+					<f:facet name="footer">
+						<p:row style="border: none !important; ">
+							<p:column colspan="12" style="border: none !important;">
+								<p:button value="Fermer" dismiss="modal"
+									style="margin-left: 140px" ajax="false"
+									onclick="PF('showUserDialog').hide()" />
+							</p:column>
+						</p:row>
+					</f:facet>
+				</p:dialog>
+
+				<p:dialog header="Attribuer Role" widgetVar="ajoutRoleDialog"
+					modal="true" resizable="false" responsive="true"
+					styleClass="popup-dialog">
+                      
+					<p:panelGrid style="margin-bottom:20px; border: none !important; ">
+						<p:row style="border: none !important; ">
+							<p:column colspan="5" style="border: none !important; ">
+								<p:outputLabel value="Role :" />
+							</p:column>
+							<p:column colspan="9" style="border: none !important; ">
+								<b:selectOneMenu colSm="12" colXs="12"
+									value="#{adminUsersView.updatedUser.role}">
+									<f:selectItem itemLabel="(Selectionnez Role)" itemValue="" />
+									<f:selectItem itemLabel="ROLE_SUPERVISEUR" itemValue="ROLE_SUPERVISEUR" />
+									<f:selectItem itemLabel="ROLE_RESPONSABLE" itemValue="ROLE_RESPONSABLE" />
+									<f:selectItem itemLabel="ROLE_RECEPTIONISTE"
+										itemValue="ROLE_RECEPTIONISTE" />
+									<f:selectItem itemLabel="ROLE_AGENT" itemValue="ROLE_AGENT" />
+									<f:selectItem itemLabel="ROLE_ADMIN" itemValue="ROLE_ADMIN" />
+								</b:selectOneMenu>
+							</p:column>
+
+						</p:row>
+					</p:panelGrid>
+
+					<f:facet name="footer">
+						<p:row style="border: none !important; ">
+
+							<p:column colspan="4" style="border: none !important;">
+								<p:commandButton  action="#{adminUsersView.attributeRole()}"
+									style=" margin-right: 10px ; margin-left:50px" update="@form"
+									value="Enregistrer" oncomplete=" PF('ajoutRoleDialog').hide();" />
+							</p:column>
+
+							<p:column colspan="4" style="border: none !important;  ">
+								<p:button value="Annuler" dismiss="modal"
+									onclick="PF('ajoutRoleDialog').hide()" />
+							</p:column>
+						</p:row>
+					</f:facet>
+				</p:dialog>
+
+
+
+
+			</h:form>
+		</b:row>
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,616 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/WEB-INF/templates/template.xhtml"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+	<ui:define name="styleCss">
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/globalStyles.css" />
+	</ui:define>
+	<ui:define name="title">Demande Visite</ui:define>
+	<ui:define name="content">
+		<h:form prependId="false">
+            <p:growl id="growl" sticky="false" life="1000" escape="true" />
+			<b:button value="#{msg.newRequest}" iconAwesome="plus"
+				outcome="addRequest" style="margin-left:5px; margin-bottom:5px;"
+				rendered="#{sec:areAnyGranted('ROLE_SUPERVISEUR, ROLE_AGENT')}">
+			</b:button>
+			<b:button value="#{msg.consultRequest}" iconAwesome="list-alt"
+				outcome="listRequest" style="margin-left:10px; margin-bottom:5px;"
+				rendered="#{sec:areAnyGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')}">
+			</b:button>
+
+
+			<h1 style="text-align: center">Liste des Demandes Visites En Cours</h1>
+
+			<b:dataTable 
+				lang="#{localeBean.language}" fixedHeader="true" responsive="true"
+				value="#{requestsVisitView.allRequests}" var="demVisit"
+				scroll-size="400px" scroll-x="false"
+				row-style-class="#{demVisit.etat eq 'En Attente' ? 'standBy' : null}  #{demVisit.etat eq 'En Cours' ? 'onProcess' : null} 
+				#{demVisit.etat eq 'Acceptée' ? 'accepted' : null} " >
+
+				<b:dataTableColumn label="Nom Visiteur "
+					labelStyleClass="table-labels" value="#{demVisit.nomVisiteur}" />
+				<b:dataTableColumn label="Prenom Visiteur "
+					labelStyleClass="table-labels" value="#{demVisit.prenomVisiteur}" />
+				<b:dataTableColumn label="Hote " labelStyleClass="table-labels"
+					value="#{demVisit.hote}" />
+				<b:dataTableColumn label="Contact " labelStyleClass="table-labels"
+					value="#{demVisit.contact}" />
+				<b:dataTableColumn label="Etat " labelStyleClass="table-labels"
+					value="#{demVisit.etat}" />
+				<b:dataTableColumn label="Editer"
+					style="text-align:center; color:#2E9CCA; " orderable="false"
+					contentStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_AGENT') ? 'hidden': null}"
+					headerStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_AGENT')? 'hidden': null}">
+					<b:commandButton iconAwesome="edit" look="primary"
+						actionListener="#{requestsVisitView.selectRequestVisit(demVisit)}"
+						oncomplete="PF('editDemVisitDialog').show()"
+						disabled="#{demVisit.etat ne 'En Attente'}">
+						<f:ajax execute="@this" render="@form" />
+					</b:commandButton>
+				</b:dataTableColumn>
+				<b:dataTableColumn label="Valider"
+					style="text-align:center; color:#2E9CCA; " orderable="false"
+					contentStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE') ? 'hidden': null}"
+					headerStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')? 'hidden': null}">
+					<b:commandButton iconAwesome="check" look="primary"
+						immediate="true" disabled="#{demVisit.etat eq 'Acceptée'}"
+						actionListener="#{requestsVisitView.selectRequestVisit(demVisit)}"
+						oncomplete="PF('validerDemVisitDialog').show()">
+						<f:ajax execute="@this" render="@form" />
+					</b:commandButton>
+				</b:dataTableColumn>
+				<b:dataTableColumn label="Créer Visite"
+					style="text-align:center; color:#2E9CCA; " orderable="false"
+					contentStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_AGENT') ? 'hidden': null}"
+					headerStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_AGENT')? 'hidden': null}">
+					<b:commandButton iconAwesome="plus" look="primary"
+						actionListener="#{requestsVisitView.selectRequestVisit(demVisit)}"
+						action="#{requestsVisitView.creerVisite()}"
+						oncomplete="PF('ajoutVisitDialog').show()"
+						disabled="#{demVisit.etat ne 'Acceptée'}">
+						<f:ajax execute="@this" render="@form" />
+
+					</b:commandButton>
+				</b:dataTableColumn>
+				<b:dataTableColumn label="Voir Détail"
+					style="text-align:center; color:#2E9CCA; " orderable="false">
+					<b:commandButton iconAwesome="info" look="primary"
+						actionListener="#{requestsVisitView.selectRequestVisit(demVisit)}"
+						immediate="true" oncomplete="PF('voirDemVisitDialog').show()">
+						<f:ajax execute="@this" render="@form" />
+					</b:commandButton>
+
+				</b:dataTableColumn>
+
+
+
+			</b:dataTable>
+
+
+			<p:dialog header="Modifier Demande Visite"
+				widgetVar="editDemVisitDialog" responsive="true"
+				styleClass="popup-dialog" resizable="true">
+
+				<p:panelGrid style="margin-bottom:20px; border: none !important; ">
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="numPiece" value="Numéro Pièce :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputText id="numPiece"
+								value="#{requestsVisitView.selectedRequest.numPiece}"
+								required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !" 
+								converter-message="Format valeur incorrect: Vous devez saisir des chiffres">
+						<f:convertNumber integerOnly="true" />
+					</p:inputText>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message for="numPiece" />
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="type" value="Type Pièce :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:selectOneMenu id="type" required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !"
+								value="#{requestsVisitView.selectedRequest.typePiece}">
+								<f:selectItem itemLabel="(Veuillez Selectionner)" itemValue="" />
+								<f:selectItem itemLabel="Carte Nationale"
+									itemValue="Carte Nationale" />
+								<f:selectItem itemLabel="Permis De Conduire"
+									itemValue="Permis De Conduire" />
+								<f:selectItem itemLabel="Passeport" itemValue="Passeport" />
+								<f:selectItem itemLabel="Carte Professionnelle"
+									itemValue="Carte Professionnelle" />
+							</p:selectOneMenu>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message for="type" />
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="visitorName" value="Nom Visiteur :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputText id="visitorName"
+								value="#{requestsVisitView.selectedRequest.nomVisiteur}"
+								label="Nom Visiteur :" required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !"
+								validatorMessage="Le nom entré ne correspond pas au format suivant: AAA AAA ou AAA-AAA ou AAA'AAA ">
+								<f:ajax event="blur" render="nomMessage" />
+								<f:validateRegex
+									pattern="^[A-ZÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ]+[\ \-\']?[A-ZÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ]+$" />
+							</p:inputText>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message id="nomMessage" for="visitorName" />
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="visitorFirstname" value="Prenom Visiteur :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputText id="visitorFirstname"
+								value="#{requestsVisitView.selectedRequest.prenomVisiteur}"
+								required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !"
+								validatorMessage="Le prenom entré ne correspond pas au format suivant: Aaa aaa ou Aaa-aaa ou Xaa'aaa ">
+								<f:ajax event="blur" render="prenomMessage" />
+								<f:validateRegex
+									pattern="^[A-Z]{1}[a-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+[\ \-\']?[a-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿA-Z]+$" />
+							</p:inputText>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message  id="prenomMessage" for="visitorFirstname" />
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="hote" value="hôte :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:selectOneMenu id="hote" required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !"
+								value="#{requestsVisitView.selectedRequest.hote}">
+								<f:selectItem itemLabel="(Veuillez Selectionner)" itemValue="" />
+								<f:selectItem itemLabel="Ministre" itemValue="Ministre" />
+								<f:selectItem itemLabel="Chef de Cabine"
+									itemValue="Chef de Cabine" />
+								<f:selectItem itemLabel="Secrétaire Général"
+									itemValue="Secrétaire Général" />
+								<f:selectItem itemLabel="Chef Inspection"
+									itemValue="Chef Inspection" />
+							</p:selectOneMenu>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message for="hote" />
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="contact" value="Contact" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputText id="contact"
+								value="#{requestsVisitView.selectedRequest.contact}" />
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message for="contact"></p:message>
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="function" value="Fonction :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputText id="function"
+								value="#{requestsVisitView.selectedRequest.fonction}" />
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message for="function"></p:message>
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="organism" value="Organisme :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputText id="organism"
+								value="#{requestsVisitView.selectedRequest.organisme}" />
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message for="organism"></p:message>
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="accompagnant" value="Accompagnant :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputTextarea id="accompagnant"
+								value="#{requestsVisitView.selectedRequest.accompagnants}" />
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message for="accompagnant"></p:message>
+						</p:column>
+					</p:row>
+
+
+				</p:panelGrid>
+
+				<f:facet name="footer">
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important;">
+
+							<p:commandButton
+								action="#{requestsVisitView.updateRequestVisit()}"
+								update="@form" value="Enregistrer"
+								style=" margin-right: 10px ; margin-left: 200px"
+								oncomplete="closeDlg(xhr, status, args)">
+
+							</p:commandButton>
+
+						</p:column>
+						<p:column colspan="4" style="border: none !important;  ">
+							<p:button value="Annuler" dismiss="modal"
+								onclick="PF('editDemVisitDialog').hide()" />
+						</p:column>
+					</p:row>
+				</f:facet>
+			</p:dialog>
+
+
+			<p:dialog header="Ajouter Visite" widgetVar="ajoutVisitDialog"
+				modal="true" resizable="false" responsive="true"
+				styleClass="popup-dialog">
+
+				<p:panelGrid style="margin-bottom:20px; border: none !important; ">
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="numBadge" value="Numéro Badge :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputText id="numBadge"
+								value="#{requestsVisitView.visiteNotProgramed.numBadge}"
+								required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !" 
+								converter-message="Format valeur incorrect: Vous devez saisir des chiffres">
+						<f:convertNumber integerOnly="true" />
+					</p:inputText>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message for="numBadge" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+				<f:facet name="footer">
+					<p:row style="border: none !important; ">
+
+						<p:column colspan="4" style="border: none !important;">
+							<p:commandButton style=" margin-right: 10px ; margin-left: 200px"
+								action="#{requestsVisitView.saveNotProgrammedVisit()}"
+								update="@form" value="Enregistrer"
+								oncomplete=" PF('ajoutVisitDialog').hide();" />
+						</p:column>
+
+						<p:column colspan="4" style="border: none !important;  ">
+							<p:button value="Annuler" dismiss="modal"
+								onclick="PF('ajoutVisitDialog').hide()" />
+						</p:column>
+					</p:row>
+				</f:facet>
+			</p:dialog>
+
+
+
+			<p:dialog header="Valider Demande Visite"
+				widgetVar="validerDemVisitDialog" modal="true" resizable="false"
+				responsive="true" styleClass="popup-dialog">
+
+				<p:panelGrid style="margin-bottom:20px; border: none !important; ">
+					<p:row style="border: none !important; ">
+						<p:column colspan="12" style="border: none !important; ">
+							<p>Accepteriez-vous cette Demande de Visite ? : </p>
+
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				<f:facet name="footer">
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important;">
+							<p:commandButton
+								action="#{requestsVisitView.acceptRequestVisit()}"
+								update="@form" value="Oui" style="margin-left: 150px"
+								oncomplete=" PF('ajoutVisitDialog').hide();" />
+						</p:column>
+						<p:column colspan="4" style="border: none !important;">
+							<p:commandButton
+								action="#{requestsVisitView.rejectRequestVisit()}"
+								update="@form" value="Non" style="margin-left: 10px"
+								oncomplete=" PF('ajoutVisitDialog').hide();" />
+						</p:column>
+						<p:column colspan="4" style="border: none !important;">
+							<p:button value="Annuler" style="margin-left: 10px"
+								onclick="PF('validerDemVisitDialog').hide()" />
+						</p:column>
+					</p:row>
+				</f:facet>
+
+			</p:dialog>
+
+
+			<p:dialog header="Aperçu Demande Visite"
+				widgetVar="voirDemVisitDialog" responsive="true"
+				style=" width:400px !important ; min-width:300px !important;  min-Y:70px !important; " >
+				<p:scrollPanel
+					style=" width: 100% !important; height: 200px !important; border: none !important; ">
+				<p:panelGrid style="margin-bottom:20px; border: none !important; ">
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important; ">
+
+						</p:column>
+
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="Numéro Pièce :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel
+								value="#{requestsVisitView.selectedRequest.numPiece}"
+								style="color:#2E9CCA; font-weight:normal;  " />
+						</p:column>
+						<p:column colspan="2" style="border: none !important; ">
+
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important; ">
+
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="Type Pièce :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel
+								value="#{requestsVisitView.selectedRequest.typePiece}"
+								style="color:#2E9CCA; font-weight:normal;  " />
+						</p:column>
+						<p:column colspan="2" style="border: none !important; ">
+
+						</p:column>
+
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important; ">
+
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="Nom Visiteur :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+
+							<p:outputLabel
+								value="#{requestsVisitView.selectedRequest.nomVisiteur}"
+								style="color:#2E9CCA; font-weight:normal;  " />
+						</p:column>
+						<p:column colspan="2" style="border: none !important; ">
+
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important; ">
+
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="Prenom Visiteur :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel
+								value="#{requestsVisitView.selectedRequest.prenomVisiteur}"
+								style="color:#2E9CCA; font-weight:normal;  " />
+						</p:column>
+						<p:column colspan="2" style="border: none !important; ">
+
+						</p:column>
+
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important; ">
+
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="Telephone Visiteur :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="#{requestsVisitView.selectedRequest.phone}"
+								style="color:#2E9CCA; font-weight:normal;  " />
+						</p:column>
+						<p:column colspan="2" style="border: none !important; ">
+
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important; ">
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="hôte :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="#{requestsVisitView.selectedRequest.hote}"
+								style="color:#2E9CCA; font-weight:normal;  " />
+						</p:column>
+						<p:column colspan="2" style="border: none !important; ">
+						</p:column>
+
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important; ">
+
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="Contact" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel
+								value="#{requestsVisitView.selectedRequest.contact}"
+								style="color:#2E9CCA; font-weight:normal;  " />
+						</p:column>
+						<p:column colspan="2" style="border: none !important; ">
+
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important; ">
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="Fonction :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel
+								value="#{requestsVisitView.selectedRequest.fonction}"
+								style="color:#2E9CCA; font-weight:normal;  " />
+						</p:column>
+						<p:column colspan="2" style="border: none !important; ">
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important; ">
+
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="Organisme :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel
+								value="#{requestsVisitView.selectedRequest.organisme}"
+								style="color:#2E9CCA; font-weight:normal;  " />
+						</p:column>
+						<p:column colspan="2" style="border: none !important; ">
+
+						</p:column>
+
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important; ">
+
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="De la Part :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel
+								value="#{requestsVisitView.selectedRequest.deLaPart}"
+								style="color:#2E9CCA; font-weight:normal;  " />
+						</p:column>
+						<p:column colspan="2" style="border: none !important; ">
+
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important; ">
+
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="Accompagnant :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel
+								value="#{requestsVisitView.selectedRequest.accompagnants}"
+								style="color:#2E9CCA; font-weight:normal;  " />
+						</p:column>
+						<p:column colspan="2" style="border: none !important; ">
+
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important; ">
+
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="Motif Visite :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="#{requestsVisitView.selectedRequest.motif}"
+								style="color:#2E9CCA; font-weight:normal;  " />
+						</p:column>
+						<p:column colspan="2" style="border: none !important; ">
+
+						</p:column>
+					</p:row>
+
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important; ">
+
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="Date Création :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel
+								value="#{requestsVisitView.selectedRequest.dateDemande}"
+								style="color:#2E9CCA; font-weight:normal;  " />
+						</p:column>
+						<p:column colspan="2" style="border: none !important; ">
+
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important; ">
+
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel value="Crée par :" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel
+								value="#{requestsVisitView.selectedRequest.user.nom}"
+								style="color:#2E9CCA; font-weight:normal;  " />
+						</p:column>
+						<p:column colspan="2" style="border: none !important; ">
+
+						</p:column>
+					</p:row>
+
+
+				</p:panelGrid>
+                </p:scrollPanel>
+				<f:facet name="footer">
+					<p:row style="border: none !important; ">
+
+						<p:column colspan="12" style="border: none !important;">
+							<p:button value="Fermer" dismiss="modal"
+								onclick="PF('voirDemVisitDialog').hide()"
+								style="margin-left: 140px" />
+						</p:column>
+					</p:row>
+				</f:facet>
+
+			</p:dialog>
+		</h:form>
+
+		<script type="text/javascript">
+    function closeDlg(xhr, status, args) {
+        if(args.validationFailed ) {
+            PF('editDemVisitDialog').jq.effect("shake", {times:5}, 0);
+        }
+        else {
+            PF('editDemVisitDialog').hide();
+        }
+    }
+</script>
+
+	</ui:define>
+</ui:composition>

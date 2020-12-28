@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/WEB-INF/templates/template.xhtml"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces">
+
+	<ui:define name="styleCss">
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/globalStyles.css" />
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/profileStyles.css" />
+	</ui:define>
+	<ui:define name="title">Profile</ui:define>
+	<ui:define name="content">
+		<b:row>
+			<b:column col-xs="12">
+				<div class="profile-box">
+					<b:row>
+						<b:column col-xs="12" col-sm="3"
+							style="margin-top:3em;margin-left:1em;" hidden="xs">
+							<b:listLinks>
+								<b:navLink value="#{msg.editProfile}" style="color:#2E9CCA"
+									outcome="edit"></b:navLink>
+								<b:navLink value="#{msg.changePassword}" style="color:#2E9CCA"></b:navLink>
+							</b:listLinks>
+						</b:column>
+
+						<b:column col-xs="12" col-sm="3" style="margin-top:3em;"
+							visible="xs">
+							<b:button value="#{msg.editProfile}" style="margin:2px;"
+								col-xs="12" outcome="edit"></b:button>
+							<b:button value="#{msg.changePassword}" style="margin:2px;"
+								col-xs="12"></b:button>
+
+						</b:column>
+
+						<b:column col-xs="12" col-sm="8" style="margin-top:3em; "
+							styleClass="profile-content">
+							<b:column col-xs="12">
+								<p:graphicImage url="/resources/images/user1.png" />
+								<h:outputLabel value="#{profileView.user.login}"
+									styleClass="titlelabels" />
+							</b:column>
+							<b:row style="margin:2em;">
+								<b:column col-xs="12" col-sm="6" style="padding:2em 0 0 2em;">
+									<b:panelGrid columns="2">
+										<h:outputLabel value="#{msg.name} :" styleClass="labels" />
+										<h:outputLabel value="#{profileView.user.nom}"
+											styleClass="infoLabels" />
+
+										<h:outputLabel value="#{msg.firstName} :" styleClass="labels" />
+										<h:outputLabel value="#{profileView.user.prenom}"
+											styleClass="infoLabels" />
+
+										<h:outputLabel value="#{msg.function} :" styleClass="labels" />
+										<h:outputLabel value="#{profileView.user.fonction}"
+											styleClass="infoLabels" />
+
+										<h:outputLabel value="#{msg.departement} :"
+											styleClass="labels" />
+										<h:outputLabel value="#{profileView.user.departement}"
+											styleClass="infoLabels" />
+
+										<h:outputLabel value="#{msg.email} :" styleClass="labels" />
+										<h:outputLabel value="#{profileView.user.email}"
+											styleClass="infoLabels" />
+									</b:panelGrid>
+
+								</b:column>
+								<b:column col-xs="12" col-sm="6" style="padding:2em 0 0 2em;">
+									<b:panelGrid columns="2">
+										<h:outputLabel value="#{msg.role} :" styleClass="labels" />
+										<h:outputLabel value="#{profileView.user.role}"
+											styleClass="infoLabels" />
+
+										<h:outputLabel value="#{msg.lastConnected} :"
+											styleClass="labels" />
+										<h:outputLabel value="#{profileView.user.dateDernConnex}"
+											styleClass="infoLabels" />
+									</b:panelGrid>
+								</b:column>
+							</b:row>
+						</b:column>
+					</b:row>
+				</div>
+
+
+			</b:column>
+
+		</b:row>
+
+	</ui:define>
+</ui:composition>

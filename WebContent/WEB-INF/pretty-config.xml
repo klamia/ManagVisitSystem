@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pretty-config xmlns="http://ocpsoft.com/prettyfaces/3.2.1"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://ocpsoft.com/prettyfaces/3.2.1
+http://ocpsoft.com/xml/ns/prettyfaces/ocpsoft-pretty-faces-3.2.1.xsd" >
+
+<url-mapping id="login">
+<pattern value="/" />
+<view-id value="/public/login.jsf" />
+</url-mapping>
+
+<url-mapping id="home">
+<pattern value="/home" />
+<view-id value="/protected/home.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/home" />
+<view-id value="#{request.contextPath}/protected/home.jsf" />
+</url-mapping>
+
+<url-mapping id="forgotPassword">
+<pattern value="/forgotPassword" />
+<view-id value="/public/forgotPassword.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/forgotPassword" />
+<view-id value="#{request.contextPath}/public/forgotPassword.jsf" />
+</url-mapping>
+
+<url-mapping id="resetPassword">
+<pattern value="/resetPassword/#{uid}" />
+<view-id value="/public/resetPassword.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/resetPassword/#{uid}" />
+<view-id value="#{request.contextPath}/public/resetPassword.jsf" />
+</url-mapping>
+
+<url-mapping id="confirmation">
+<pattern value="/confirmation" />
+<view-id value="/public/confirmation.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/confirmation" />
+<view-id value="#{request.contextPath}/public/confirmation.jsf" />
+</url-mapping>
+
+<url-mapping id="success">
+<pattern value="/success" />
+<view-id value="/public/success.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/success" />
+<view-id value="#{request.contextPath}/public/success.jsf" />
+</url-mapping>
+
+<url-mapping id="erreur404">
+<pattern value="/erreur404" />
+<view-id value="/public/pageNotFound.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/erreur404" />
+<view-id value="#{request.contextPath}/public/pageNotFound.jsf" />
+</url-mapping>
+
+<url-mapping id="erreur403">
+<pattern value="/erreur403" />
+<view-id value="/public/denied.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/erreur403" />
+<view-id value="#{request.contextPath}/public/denied.jsf" />
+</url-mapping>
+
+
+
+<url-mapping id="adhome">
+<pattern value="/adhome" />
+<view-id value="/admin/home.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/adhome" />
+<view-id value="#{request.contextPath}/admin/home.jsf" />
+</url-mapping>
+
+<url-mapping id="myRDV">
+<pattern value="/myRDV"/>
+<view-id value="/protected/rdv/myRdv.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/myRDV" />
+<view-id value="#{request.contextPath}/protected/rdv/myRdv.jsf" />
+</url-mapping>
+
+<url-mapping id="listRDV">
+<pattern value="/listRDV"/>
+<view-id value="/protected/rdv/listeRDV.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/listRDV" />
+<view-id value="#{request.contextPath}/protected/rdv/listeRDV.jsf" />
+</url-mapping>
+
+
+
+<url-mapping id="rdv">
+<pattern value="/rdv" />
+<view-id value="/protected/rdv/newRdv.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/rdv" />
+<view-id value="#{request.contextPath}/protected/rdv/newRdv.jsf" />
+</url-mapping>
+
+<url-mapping id="myVisits">
+<pattern value="/myVisits"/>
+<view-id value="/protected/visit/myVisits.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/myVisits" />
+<view-id value="#{request.contextPath}/protected/visit/myVisits.jsf" />
+</url-mapping>
+
+<url-mapping id="visitsList">
+<pattern value="/visitsList"/>
+<view-id value="/protected/visit/visitsList.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/visitsList" />
+<view-id value="#{request.contextPath}/protected/visit/visitsList.jsf" />
+</url-mapping>
+
+<url-mapping id="visitRequests">
+<pattern value="/requests"/>
+<view-id value="/protected/request/myVisitRequests.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/requests"/>
+<view-id value="#{request.contextPath}/protected/request/myVisitRequests.jsf" />
+</url-mapping>
+
+
+<url-mapping id="listRequest">
+<pattern value="/listRequest"/>
+<view-id value="/protected/request/requestsVisitList.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/listRequest" />
+<view-id value="#{request.contextPath}/request/requestsVisitList.jsf" />
+</url-mapping>
+
+
+<url-mapping id="addRequest">
+<pattern value="/addRequest" />
+<view-id value="/protected/request/newRequest.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/addRequest" />
+<view-id value="#{request.contextPath}/protected/request/newRequest.jsf" />
+</url-mapping>
+
+
+<url-mapping id="visit">
+<pattern value="/visit/#{page}/#{id}" />
+<view-id value="/protected/visit/newVisit.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/visit/#{page}/#{id}" />
+<view-id value="#{request.contextPath}/protected/visit/newVisit.jsf" />
+</url-mapping>
+
+<url-mapping id="edituser">
+<pattern value="/edituser" />
+<view-id value="/protected/editProfile.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/edituser" />
+<view-id value="#{request.contextPath}/protected/editProfile.jsf" />
+</url-mapping>
+
+<url-mapping id="newacc">
+<pattern value="/newaccount" />
+<view-id value="/public/subscribe.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/newaccount" />
+<view-id value="#{request.contextPath}/public/subscribe.jsf" />
+</url-mapping>
+
+<url-mapping id="adusr">
+<pattern value="/adusr" />
+<view-id value="/admin/users.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/adusr" />
+<view-id value="#{request.contextPath}/admin/users.jsf" />
+</url-mapping>
+
+<url-mapping id="changeusr">
+<pattern value="/changeusr/#{id}" />
+<view-id value="/admin/editUser.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/changeusr/#{id}" />
+<view-id value="#{request.contextPath}/admin/editUser.jsf" />
+</url-mapping>
+
+<url-mapping id="dtlusr">
+<pattern value="/dtlusr/#{id}" />
+<view-id value="/admin/userDetails.jsf" />
+</url-mapping>
+
+<url-mapping>
+<pattern value="/dtlusr/#{id}" />
+<view-id value="#{request.contextPath}/admin/userDetails.jsf" />
+</url-mapping>
+
+
+</pretty-config>

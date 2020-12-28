@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/WEB-INF/templates/template.xhtml"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces">
+
+	<ui:define name="styleCss">
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/resources/css/globalStyles.css" />
+	</ui:define>
+	<ui:define name="title">Mes Demandes Visite</ui:define>
+	<ui:define name="content">
+	
+			<b:commandLink value="Sortir de l'archive" iconAwesome="arrow-left" outcome="visitRequests" style="float:right; margin-right:10px;" />
+			
+			<h1 style="text-align: center">Archive des Demandes Visite</h1>
+			 
+			<b:dataTable excel="true" pdf="true" print="true" 
+				lang="#{localeBean.language}" fixedHeader="true" responsive="true"
+				value="#{listRequestVisitView.allRequestTerminated}" var="demVisit" scroll-size="400px" 
+				scroll-x="false" >
+				
+				<b:dataTableColumn label="Nom Visiteur "
+					labelStyleClass="table-labels" value="#{demVisit.nomVisiteur}" />
+				<b:dataTableColumn label="Prenom Visiteur "
+					labelStyleClass="table-labels" value="#{demVisit.prenomVisiteur}" />
+				<b:dataTableColumn label="Hote " labelStyleClass="table-labels"
+					value="#{demVisit.hote}" />
+				<b:dataTableColumn label="Contact " labelStyleClass="table-labels"
+					value="#{demVisit.contact}" />
+				<b:dataTableColumn label="Etat " labelStyleClass="table-labels"
+					value="#{demVisit.etat}" />
+
+			
+			</b:dataTable>
+
+
+			
+
+
+	</ui:define>
+</ui:composition>

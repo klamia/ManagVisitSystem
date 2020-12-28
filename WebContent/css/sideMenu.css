@@ -1,0 +1,56 @@
+@CHARSET "UTF-8";
+
+.panel-group{
+	margin-bottom:0 !important;
+}
+.panel-default{
+	border-top: 1px solid #464866;
+    border-bottom:1px solid #151714;
+    border-right:0;
+    border-left:0;
+}
+
+.panel-default > .panel-heading{
+	color:#aaabb8;
+	background-color:#25274D !important;
+	padding-top:12px;
+	padding-bottom:12px;
+}
+
+.panel{
+	border:0;
+	border-top: 1px solid #464866;
+	border-radius:0;
+	background-color:#464866;
+}
+
+.nav-pills-panel .panel-heading{
+
+border-bottom:1px solid #151714;
+
+}
+
+.nav-pills-panel .panel-heading:focus, .nav-pills-panel .panel-heading:hover{
+background-color:#464866 !important;
+border-left: 3px solid #2E9CCA;
+
+}
+
+.active .panel-heading{
+background-color:#464866 !important;
+border-left: 3px solid #2E9CCA;
+
+}
+
+.nav-pills-panel .panel-heading a:focus, .nav-pills-panel .panel-heading a:hover{
+	text-decoration:none;
+}
+
+.panel-body{
+	padding:0;
+}
+
+.panel-group .panel-heading + .panel-collapse > .panel-body, .panel-group .panel-heading + .panel-collapse > .list-group {
+    border-top:0;
+}
+

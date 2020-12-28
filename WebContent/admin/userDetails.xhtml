@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/WEB-INF/templates/adminTemplate.xhtml"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces">
+
+	<ui:define name="styleCss">
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/usersStyle.css" />
+	</ui:define>
+	<ui:define name="title">Users</ui:define>
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewParam name="id" />
+			<f:event type="preRenderView" listener="#{editUserView.init(id)}" />
+		</f:metadata>
+		<b:form>
+			<b:row>
+				<b:column col-sm="3" col-md="2" styleClass="sidebar" col-xs="12">
+					<b:panel>
+						<b:listLinks style="text-align:left;">
+							<b:navLink value="Voir utilisateur" col-xs="12" outcome="dtl">
+							<f:param name="id" value="#{editUserView.user.id}" />
+							</b:navLink>
+							<b:navLink value="Modifier utilisateur" col-xs="12" outcome="edit">
+							<f:param name="id" value="#{editUserView.user.id}" />
+							</b:navLink>
+							<b:navLink value="Tous les utilisateurs" col-xs="12"
+								outcome="usr"></b:navLink>
+						</b:listLinks>
+					</b:panel>
+					<b:column col-sm="12" style="text-align:center;">
+						<p:ajaxStatus style="display:block;">
+							<f:facet name="start">
+								<p:graphicImage url="/images/ajaxLoading1.gif" />
+							</f:facet>
+						</p:ajaxStatus>
+					</b:column>
+				</b:column>
+
+
+				<b:column col-sm="9" offset-sm="3" col-md="10" offset="2"
+					styleClass="main" col-xs="12">
+					<b:panel>
+						<h4 style="margin-bottom: 2em;">Détail de l'utilisateur:
+							#{editUserView.user.login}</h4>
+						<b:panelGrid colSpans="2,10">
+							<h:outputLabel value="Nom utilisateur: "></h:outputLabel>
+							<h:outputLabel value="#{editUserView.user.nom}" styleClass="info"></h:outputLabel>
+							<h:outputLabel value="Prénom utilisateur: "></h:outputLabel>
+							<h:outputLabel value="#{editUserView.user.prenom}"
+								styleClass="info"></h:outputLabel>
+							<h:outputLabel value="Fonction: "></h:outputLabel>
+							<h:outputLabel value="#{editUserView.user.fonction}"
+								styleClass="info"></h:outputLabel>
+							<h:outputLabel value="Département: "></h:outputLabel>
+							<h:outputLabel value="#{editUserView.user.departement}"
+								styleClass="info"></h:outputLabel>
+							<h:outputLabel value="Email: "></h:outputLabel>
+							<h:outputLabel value="#{editUserView.user.email}"
+								styleClass="info"></h:outputLabel>
+							<h:outputLabel value="Rôle: "></h:outputLabel>
+							<h:outputLabel value="#{editUserView.user.role}"
+								styleClass="info"></h:outputLabel>
+							<h:outputLabel value="Date de création: "></h:outputLabel>
+							<h:outputLabel value="#{editUserView.user.dateCreation}"
+								styleClass="info">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputLabel>
+							<h:outputLabel value="Date dernière connxion: "></h:outputLabel>
+							<h:outputLabel value="#{editUserView.user.dateDernConnex}"
+								styleClass="info">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputLabel>
+							<h:outputLabel value="Activé: "></h:outputLabel>
+							<h:panelGroup>
+								<p:graphicImage url="/images/yes.gif"
+									rendered="#{user.enabled}" />
+								<p:graphicImage url="/images/no.png"
+									rendered="#{!user.enabled}" />
+							</h:panelGroup>
+							<h:outputLabel value="Connecté: "></h:outputLabel>
+							<h:panelGroup>
+								<p:graphicImage url="/images/online.png"
+									rendered="#{user.connecte}" />
+								<p:graphicImage url="/images/offline.png"
+									rendered="#{!user.connecte}" />
+							</h:panelGroup>
+						</b:panelGrid>
+					</b:panel>
+				</b:column>
+			</b:row>
+		</b:form>
+	</ui:define>
+</ui:composition>

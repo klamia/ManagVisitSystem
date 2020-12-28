@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:b="http://bootsfaces.net/ui"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+<ui:composition>
+	<h:form>
+
+		<b:listLinks styleClass="menuList nav-pills nav-stacked" id="menuList">
+			<b:navLink outcome="home" value="#{msg.home}" icon="home" id="home"></b:navLink>
+			<b:navLink id="myRDV" outcome="myRDV" value="#{msg.rdv}"
+				icon="calendar"></b:navLink>
+			<b:navLink id="requests" outcome="visitRequests"
+				value="#{msg.visitRequests}" icon="calendar"></b:navLink>
+			<b:navLink id="personelVisits" outcome="myVisits"
+				value="#{msg.myVisits}" icon="calendar"></b:navLink>
+			<sec:authorize ifAnyGranted="ROLE_SUPERVISEUR, ROLE_RESPONSABLE">
+				<b:panel title="#{msg.statistics}" collapsed="true"
+					styleClass="nav-pills-panel" icon="chart">
+					<b:listLinks styleClass="nav nav-pills nav-stacked">
+						<b:navLink value="My visits" icon="fa fa-caret-right" />
+						<b:navLink href="#" value="Bootstrap" icon="caret-right"></b:navLink>
+
+					</b:listLinks>
+				</b:panel>
+			</sec:authorize>
+		</b:listLinks>
+		<script type="text/javascript">
+			//<![CDATA[ 
+			var href = location.href;
+			var index = href.lastIndexOf("/");
+			var result = href.substr(index + 1);
+			var x = document.querySelector('[id$="menuList"]');
+			var y = x.children;
+			for (i = 0; i < y.length; i++) {
+				//	window.alert('element ID is '+y[i].id+' tag name is '+y[i].tagName);
+				if (y[i].id.endsWith(result))
+					y[i].classList.add("active");
+				else {
+					var z = y[i].getElementsByTagName("li");
+					for (j = 0; j < z.length; j++)
+						if (z[j].id.endsWith(result))
+							y[i].classList.add("active");
+					y[i].id.collapse();
+				}
+			}
+			//]]>
+		</script>
+
+
+
+	</h:form>
+</ui:composition>
+</html>

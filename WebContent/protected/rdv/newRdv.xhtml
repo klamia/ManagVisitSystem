@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/WEB-INF/templates/template.xhtml"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces">
+
+	<ui:define name="styleCss">
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/globalStyles.css" />
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/rdvStyles.css" />
+	</ui:define>
+	<ui:define name="title">#{msg.newRdv}</ui:define>
+	<ui:define name="content">
+		<h:form>
+			<b:row>
+				<b:panel col-xs="12" style=" text-align:center;" col-sm="10"
+					offsetSm="1" styleClass="title-panel">
+					<h4>#{msg.newRdv}</h4>
+				</b:panel>
+			</b:row>
+			<b:row>
+
+				<b:panelGrid col-spans="3,3,6" col-xs="12" col-sm="10" offsetSm="1"
+					style="border:solid 3px; margin:10px 0; padding:10px;">
+
+					<h:outputLabel for="nom" value="Nom Visiteur : * "  />
+					<b:inputText id="nom" value="#{newRdvView.rdv.nomVisiteur}" placeholder="nom en majuscule"
+						required="true" required-message="Champ obligatoire :Vous devez indiquez une valeur !"
+						validatorMessage="Le nom entré ne correspond pas au format suivant: AAA AAA ou AAA-AAA ou AAA'AAA ">
+							<f:ajax event="blur" render="nomMessage" />
+							<f:validateRegex
+								pattern="^[A-ZÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ]+[\ \-\']?[A-ZÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ]+$" />
+					</b:inputText>
+					<b:message for="nom" id="nomMessage"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;"   />
+
+					<h:outputLabel for="prenom" value="Prénom Visiteur : *" />
+					<b:inputText id="prenom" value="#{newRdvView.rdv.prenomVisiteur}" placeholder="1ere lettre en majuscule"
+						required="true" required-message="Champ obligatoire :Vous devez indiquez une valeur !" 
+						validatorMessage="Le prenom entré ne correspond pas au format suivant: Xxx xxx ou Xxx-xxx ou Xxx'xxx ">
+							<f:ajax event="blur" render="prenomMessage" />
+							<f:validateRegex
+								pattern="^[A-Z]{1}[a-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+[\ \-\']?[a-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿA-Z]+$" />
+						</b:inputText>
+					<b:message for="prenom" id="prenomMessage"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;" />
+
+					<h:outputLabel for ="date" value="Date Rendez-Vous : *" />
+					<b:dateTimePicker id="date" value="#{newRdvView.rdv.dateRdv}" show-time="false" style="margin-bottom: 15px;"
+						required="true" required-message="Champ obligatoire :Vous devez indiquez une valeur !"  minDate="moment().add(0, 'd').toDate()"   maxDate="moment().add(20, 'd').toDate()"
+						format="DD/MM/YYYY">
+					 <f:ajax event="blur" render="dateMessage" />
+					</b:dateTimePicker>
+					<b:message for="date"  id="dateMessage"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;" />
+
+					<h:outputLabel for="time" value="Heure Rendez-Vous : *" />
+					<b:dateTimePicker id="time" value="#{newRdvView.rdvTime}" show-date="false" style="margin-bottom: 15px;"
+						required="true" required-message="Champ obligatoire :Vous devez indiquez une valeur !"  format="HH:mm" 
+						iconAwesome="clock-o">
+					<f:ajax event="blur" render="heureMessage" />	
+					</b:dateTimePicker>
+					<b:message for="time" id="heureMessage"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;" />
+
+				</b:panelGrid>
+
+			</b:row>
+			<b:row>
+				<b:column span="2" offset="4">
+					<b:commandButton value="#{msg.create}"
+						action="#{newRdvView.saveRdv()}" style="width:100%"
+						icon-awesome="fas fa-save"></b:commandButton>
+				</b:column>
+				<b:column span="2">
+					<b:button outcome="myRDV" value="#{msg.cancel}" style="width:100%"
+						icon="remove"></b:button>
+				</b:column>
+
+			</b:row>
+
+
+
+		</h:form>
+
+
+	</ui:define>
+</ui:composition>

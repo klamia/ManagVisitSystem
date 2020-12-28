@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/WEB-INF/templates/template.xhtml"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces">
+
+	<ui:define name="styleCss">
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/resources/css/globalStyles.css" />
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/resources/css/rdvStyles.css" />
+	</ui:define>
+	<ui:define name="title">#{msg.newRequest}</ui:define>
+	<ui:define name="content">
+		<h:form>
+			<b:row>
+				<b:panel col-xs="12" style=" text-align:center;" col-sm="8"
+					offsetSm="2" styleClass="title-panel">
+					<h4>#{msg.newRequest}</h4>
+				</b:panel>
+			</b:row>
+			<b:row>
+				<b:column col-xs="12" col-sm="8" offsetSm="2"
+					style="margin-top:30px;">
+					<b:inputText id="numpiece"
+						value="#{newRequestView.demVisit.numPiece}"  col-xs="6"
+						col-sm="6"
+						label="Numéro Pièce :" required="true"
+						required-message="Champ obligatoire :Vous devez indiquez une valeur !" 
+						converter-message="Format valeur incorrect: Vous devez saisir des chiffres">
+						<f:convertNumber integerOnly="true" />
+					</b:inputText>
+						
+					<b:message for="numpiece"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;"
+						col-xs="6" col-sm="6" />
+				</b:column>
+		
+				<b:column col-xs="12" col-sm="8" offsetSm="2"
+					style="margin-top:30px;" >
+					<b:selectOneMenu id="typePiece" col-xs="6"
+						col-sm="6"
+						label=" Type Pièce" required="true"
+						required-message="Champ obligatoire :Vous devez indiquez une valeur !"
+						value="#{newRequestView.demVisit.typePiece}">
+						<f:selectItem itemLabel="(Please select)" itemValue="" />
+						<f:selectItem itemLabel="Carte Nationale"
+							itemValue="Carte Nationale" />
+						<f:selectItem itemLabel="Permis De Conduire"
+							itemValue="Permis De Conduire" />
+						<f:selectItem itemLabel="Passeport" itemValue="Passeport" />
+						<f:selectItem itemLabel="Carte Professionnelle"
+							itemValue="Carte Professionnelle" />
+					</b:selectOneMenu>
+					<b:message for="typePiece"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;" col-xs="6" col-sm="6" />
+				</b:column>
+				
+				<b:column col-xs="12" col-sm="8" offsetSm="2"
+					style="margin-top:30px;">
+					<b:inputText id="nom"
+						value="#{newRequestView.demVisit.nomVisiteur}" col-xs="6" col-sm="6" label="Nom Visiteur :" required="true"
+						required-message="Champ obligatoire :Vous devez indiquez une valeur !" />
+					<b:message for="nom"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;"
+						col-xs="6" col-sm="6" />
+				</b:column>
+				
+				<b:column col-xs="12" col-sm="8" offsetSm="2"
+					style="margin-top:30px;">
+					<b:inputText id="prenom"
+						value="#{newRequestView.demVisit.prenomVisiteur}" col-xs="6"
+						col-sm="6" label="Prenom Visiteur: " required="true"
+						required-message="Champ obligatoire :Vous devez indiquez une valeur !" />
+					<b:message for="prenom"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;"
+						col-xs="6" col-sm="6" />
+				</b:column>
+				
+								<b:column col-xs="12" col-sm="8" offsetSm="2"
+					style="margin-top:30px;">
+					<b:selectOneMenu id="hote" value="#{newRequestView.demVisit.hote}"
+						col-xs="6" col-sm="6" label="#{msg.host}: " required="true"
+						required-message="Champ obligatoire :Vous devez indiquez une valeur !">
+						<f:selectItem itemLabel="(Please select)" itemValue="" />
+						<f:selectItem itemLabel="Ministre" itemValue="Ministre" />
+						<f:selectItem itemLabel="Chef de Cabine"
+							itemValue="Chef de Cabine" />
+						<f:selectItem itemLabel="Secrétaire Général"
+							itemValue="Secrétaire Général" />
+						<f:selectItem itemLabel="Chef Inspection"
+							itemValue="Chef Inspection" />
+					</b:selectOneMenu>
+					<b:message for="hote"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;"
+						col-xs="6" col-sm="6" />
+				</b:column>
+				
+				<b:column col-xs="12" col-sm="8" offsetSm="2"
+					style="margin-top:30px;">
+					<b:inputText id="contact"
+						value="#{newRequestView.demVisit.contact}" col-xs="6" col-sm="6"
+						label="Contact :" required="true"
+						required-message="Champ obligatoire :Vous devez indiquez une valeur !" />
+					<b:message for="contact"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;"
+						col-xs="6" col-sm="6" />
+				</b:column>
+				
+				
+				
+				<b:column col-xs="12" col-sm="8" offsetSm="2"
+					style="margin-top:30px;">
+					<b:inputText id="fonction"
+						value="#{newRequestView.demVisit.fonction}" col-xs="6" col-sm="6"
+						label="Fonction: " />
+					<b:message for="fonction"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;"
+						col-xs="6" col-sm="6" />
+				</b:column>
+				
+				<b:column col-xs="12" col-sm="8" offsetSm="2"
+					style="margin-top:30px;">
+					<b:inputText id="phone" value="#{newRequestView.demVisit.phone}"
+						col-xs="6" col-sm="6" label="Téléphone :" 
+                    converter-message="Format valeur incorrect: Vous devez saisir des chiffres">
+						<f:convertNumber integerOnly="true" />
+					</b:inputText>
+
+					<b:message for="phone"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;"
+						col-xs="6" col-sm="6" />
+				</b:column>
+				
+				<b:column col-xs="12" col-sm="8" offsetSm="2"
+					style="margin-top:30px;">
+					<b:inputText id="organism"
+						value="#{newRequestView.demVisit.organisme}" col-xs="6" col-sm="6"
+						label="Organisme :" />
+					<b:message for="organism"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;"
+						col-xs="6" col-sm="6" />
+				</b:column>
+				
+				
+				<b:column col-xs="12" col-sm="8" offsetSm="2"
+					style="margin-top:30px;">
+					<b:inputText id="delapart"
+						value="#{newRequestView.demVisit.deLaPart}" col-xs="6" col-sm="6"
+						label="De la part de :" />
+					<b:message for="delapart"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;"
+						col-xs="6" col-sm="6" />
+				</b:column>
+				
+				<b:column col-xs="12" col-sm="8" offsetSm="2"
+					style="margin-top:30px;">
+					<b:inputTextarea id="accompagnants"
+						value="#{newRequestView.demVisit.accompagnants}" col-xs="6"
+						col-sm="6" label="Accompagnant(s) :" />
+					<b:message for="accompagnants"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;"
+						col-xs="6" col-sm="6" />
+				</b:column>
+				
+				<b:column col-xs="12" col-sm="8" offsetSm="2"
+					style="margin-top:30px;">
+					<b:inputTextarea id="about" col-xs="6" col-sm="6"
+						label="#{msg.about}: " value="#{newRequestView.demVisit.motif}" />
+					<b:message for="about"
+						line-break-tag="&amp;lt;p&amp;gt;&amp;lt;hr /&amp;gt;&amp;lt;/p&amp;gt;"
+						col-xs="6" col-sm="6" />
+				</b:column>
+               </b:row>
+			
+			<b:row>
+				<b:panel col-xs="12" styleClass="btn-panel">
+					<b:commandButton value="#{msg.create}" col-xs="12" col-sm="3"
+						icon-awesome="fas fa-save"
+						action="#{newRequestView.saveRequestVisit()}"></b:commandButton>
+					<b:button outcome="visitRequests" value="#{msg.cancel}" col-xs="12"
+						col-sm="3" offset-sm="6" icon="remove"></b:button>
+				</b:panel>
+
+			</b:row>
+		</h:form>
+	</ui:define>
+</ui:composition>

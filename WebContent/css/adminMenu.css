@@ -1,0 +1,41 @@
+@CHARSET "UTF-8";
+
+@media screen and (min-width: 767px) {
+.navbar-default{
+	background-color:#dddde2;
+	border-color:#c3c4cd;
+	
+}
+
+.navbar{
+	height:120px;
+	text-transform: uppercase;
+	font-weight: bold;
+	
+}
+
+.navbar-default .navbar-nav > li > a {
+	color:#464866 !important;
+	}
+	
+.navbar-default .navbar-nav > li > a:hover {
+	color: #2E9CCA !important;
+	}
+	
+	.container-fluid > .navbar-collapse{
+	margin-top:60px;
+	margin-left:150px;
+	}
+	
+	.nav > li > span{ 
+	position: relative;
+	display: block; 
+	padding: 20px 15px 35px 15px;
+	}
+	
+	.navbar-default .navbar-nav > li > span{
+		color:#2E9CCA !important;
+		font-weight:lighter;
+		text-transform: none;
+	}
+}

@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="#{localeBean.language}" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:b="http://bootsfaces.net/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces">
+
+
+<f:view locale="#{localeBean.locale}">
+	<h:head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<ui:insert name="styleCss">[Insert your css sheet here]</ui:insert>
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/template.css" />
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/sideMenu.css" />
+		<title><ui:insert name="title">[Insert your title here]</ui:insert></title>
+
+	</h:head>
+	<h:body>
+		<ui:insert name="xsMenu">
+			<ui:include src="/WEB-INF/templates/xsMenu.xhtml" />
+		</ui:insert>
+
+		<b:container fluid="true">
+			<b:row styleClass="main-content">
+				<b:column col-sm="2" hidden="xs" styleClass="side-menu">
+					<ui:insert name="sideMenu">
+						<ui:include src="/WEB-INF/templates/sideMenu.xhtml" />
+					</ui:insert>
+				</b:column>
+				<!-- side-menu -->
+				<b:column col-sm="10" styleClass="side-content">
+					<h:form>
+						<b:navBar fluid="true" sticky="true" style="height:100px;"
+							class="header-bar">
+							<b:image  value="/images/logos.png"   />
+							<b:navbarLinks pull="right">
+								<b:dropMenu iconAwesome="bell" value=""
+									style="font-size:24px;  height:100px;">
+									<b:navLink header=" Vous avez (3) notifications aujourd'hui"></b:navLink>
+									<b:navLink></b:navLink>
+								</b:dropMenu>
+								<b:dropMenu iconAwesome="user" value=""
+									style="font-size:24px; height:100px;">
+									<b:navLink header=" #{msg.hello} #{request.userPrincipal.name}"
+										style="font-size:12px; color:#2E9CCA; font-weight:bold;" />
+									<b:navLink></b:navLink>
+									<b:navLink value="#{msg.profile}" outcome="profile"></b:navLink>
+									<b:navCommandLink value="#{msg.logout}"
+										action="#{loginBean.logout()}"></b:navCommandLink>
+								</b:dropMenu>
+							</b:navbarLinks>
+						</b:navBar>
+						<!-- header menu -->
+					</h:form>
+					<b:container styleClass="content">
+						<ui:insert name="content">Insert your content here</ui:insert>
+					</b:container>
+					<div id="footer">
+
+						<h4 class="footer-wid-title">Contactez-nous</h4>
+
+						<p>
+							<span> Adresse: </span> 5,Rue des Trois Frères Aissou,
+							Ben-Aknoun-BP 143.16030-Alger <br /> Tél/Fax: +213(0)23255416 /
+							+213(0)23255410 <br /> Website:<a href="http://dsism.cerist.dz">http://dsism.cerist.dz</a>
+						</p>
+
+
+
+					</div>
+					<!-- footer -->
+				</b:column>
+				<!-- side-content -->
+			</b:row>
+			<!-- main-content -->
+
+		</b:container>
+	</h:body>
+</f:view>
+</html>

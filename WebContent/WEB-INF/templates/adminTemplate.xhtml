@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="#{localeBean.language}" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:b="http://bootsfaces.net/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces">
+
+
+<f:view locale="#{localeBean.locale}">
+	<h:head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<ui:insert name="styleCss">[Insert your css sheet here]</ui:insert>
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/adminTemplate.css" />
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/adminMenu.css" />
+		<title><ui:insert name="title">[Insert your title here]</ui:insert></title>
+
+	</h:head>
+	<h:body>
+		<ui:insert name="adminMenu">
+			<ui:include src="/WEB-INF/templates/adminMenu.xhtml" />
+		</ui:insert>
+		<b:container fluid="true" styleClass="main-container">
+			<ui:insert name="content">Insert your content here</ui:insert>
+		</b:container>
+		<b:container fluid="true" styleClass="footer">
+			<h4 class="footer-wid-title">Contactez-nous</h4>
+
+			<p>
+				<span> Adresse: </span> 5,Rue des Trois Frères Aissou, Ben-Aknoun-BP
+				143.16030-Alger <br /> Tél/Fax: +213(0)23255416 / +213(0)23255410 <br />
+				Website:<a href="http://dsism.cerist.dz">http://dsism.cerist.dz</a>
+			</p>
+		</b:container>
+
+	</h:body>
+</f:view>
+</html>

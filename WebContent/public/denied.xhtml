@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/WEB-INF/templates/publicTemplate.xhtml"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces">
+
+
+	<ui:define name="loginBox">
+		<h:form>
+			<b:panel class="login-box" title="ERREUR 403: Accès Non Authorisé"  look="info"
+				collapsible="false" style="text-align:center; padding:0px;  ">
+
+				<div class="login-header" style="text-align: center; padding: 0px;">
+					<p:graphicImage url="/resources/images/logos.png" />
+					<p:outputLabel
+						value="Vous n'avez pas assez de droits pour accéder à cette page" />
+				</div>
+				<f:facet name="footer">
+
+					<b:button  outcome="logout" value="Ok" 
+						ajax="false" />
+
+
+				</f:facet>
+
+
+			</b:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

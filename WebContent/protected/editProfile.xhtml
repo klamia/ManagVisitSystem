@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/WEB-INF/templates/template.xhtml"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces">
+
+	<ui:define name="styleCss">
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/globalStyles.css" />
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/profileStyles.css" />
+	</ui:define>
+	<ui:define name="title">Profile</ui:define>
+	<ui:define name="content">
+		<h:form>
+			<b:row>
+				<b:column col-xs="12">
+					<div class="profile-box">
+						<b:panelGrid col-spans="2,4,6" style="margin:2em;">
+							<h:outputLabel for="name" value="#{msg.name}: *"
+								styleClass="labels" />
+							<b:inputText id="name" required="true"></b:inputText>
+							<b:message for="name"></b:message>
+
+							<h:outputLabel for="firstname" value="#{msg.firstName}: *"
+								styleClass="labels" />
+							<b:inputText id="firstname" required="true"></b:inputText>
+							<b:message for="firstname"></b:message>
+
+							<h:outputLabel for="depart" value="#{msg.departement}: *"
+								styleClass="labels" />
+							<b:inputText id="depart" required="true"></b:inputText>
+							<b:message for="depart"></b:message>
+
+							<h:outputLabel for="function" value="#{msg.function}: *"
+								styleClass="labels" />
+							<b:inputText id="function" required="true"></b:inputText>
+							<b:message for="function"></b:message>
+
+							<h:outputLabel for="email" value="#{msg.email}: *"
+								styleClass="labels" />
+							<b:inputText id="email" required="true"></b:inputText>
+							<b:message for="email"></b:message>
+
+						</b:panelGrid>
+					</div>
+
+
+				</b:column>
+
+			</b:row>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

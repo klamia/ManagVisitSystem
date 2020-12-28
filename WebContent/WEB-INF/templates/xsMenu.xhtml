@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:b="http://bootsfaces.net/ui" 
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces">
+
+<ui:composition>
+	<h:form>
+		<b:navBar fluid="true" inverse="true" styleClass="visible-xs">
+			<b:navbarLinks>
+				<b:navLink value="#{msg.home}" styleClass="active" outcome="home"
+					id="home">
+					<span style="font-size: 16px;"
+						class="pull-right showopacity glyphicon glyphicon-home"></span>
+				</b:navLink>
+				<b:navLink value="#{msg.notifications}">
+					<span class="badge pull-right showopacity"
+						style="font-size: 16px; background-color: #DC143C;">3</span>
+				</b:navLink>
+				<b:navLink value="#{msg.profile}" outcome="profile">
+					<span style="font-size: 16px;"
+						class="pull-right showopacity glyphicon glyphicon-user"></span>
+				</b:navLink>
+				<b:navLink id="myRDV" outcome="myRDV" value="#{msg.rdv}">
+					<span style="font-size: 16px;"
+						class="pull-right showopacity glyphicon glyphicon-calendar"></span>
+				</b:navLink>
+				<b:navLink id="requests" outcome="visitRequests"
+					value="#{msg.visitRequests}">
+					<span style="font-size: 16px;"
+						class="pull-right showopacity glyphicon glyphicon-calendar"></span>
+				</b:navLink>
+				<b:navLink id="personelVisits" outcome="myVisits"
+					value="#{msg.myVisits}">
+					<span style="font-size: 16px;"
+						class="pull-right showopacity glyphicon glyphicon-calendar"></span>
+				</b:navLink>
+			<sec:authorize ifAnyGranted="ROLE_SUPERVISEUR, ROLE_RESPONSABLE"> 
+				<b:dropMenu value="#{msg.statistics}" >
+					<b:navLink value="statistiques1">
+					</b:navLink>
+					<b:navLink value="statistiques2"></b:navLink>
+				</b:dropMenu>
+			</sec:authorize>	
+				<b:navCommandLink value="#{msg.logout}" action="#{loginBean.logout}">
+					<span style="font-size: 16px;"
+						class="pull-right showopacity glyphicon glyphicon-log-out"></span>
+				</b:navCommandLink>
+			</b:navbarLinks>
+		</b:navBar>
+	</h:form>
+</ui:composition>
+</html>

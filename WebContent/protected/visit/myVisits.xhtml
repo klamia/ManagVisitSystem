@@ -1,0 +1,624 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/WEB-INF/templates/template.xhtml"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+	<ui:define name="styleCss">
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/globalStyles.css" />
+	</ui:define>
+	<ui:define name="title">Visite</ui:define>
+	<ui:define name="content">
+		<b:form>
+			<p:growl id="growl"  showDetail="false" life="3000" sticky="false"
+				rendered="#{!facesContext.validationFailed}" />
+
+			<b:button value="#{msg.consultRequest}" iconAwesome="list-alt"
+				outcome="visitsList" style="margin-left:10px; margin-bottom:5px;"
+				rendered="#{sec:areAnyGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')}">
+			</b:button>
+
+			<h1 style="text-align: center">Liste des Visites En Cours</h1>
+
+			<b:dataTable  scroll-size="400px"
+				scroll-x="false"  lang="#{localeBean.language}"
+				fixedHeader="true" responsive="true" value="#{visitsView.allVisits}"
+				var="visit"
+				row-style-class="#{visit.etat eq 'En Attente' ? 'standBy' : null}  #{visit.etat eq 'En Cours' ? 'onProcess' : null} 
+				#{visit.etat eq 'Validée' ? 'accepted' : null} ">
+
+				<b:dataTableColumn label="Nom Visiteur "
+					labelStyleClass="table-labels" value="#{visit.nomVisiteur}" />
+				<b:dataTableColumn label="Prenom Visiteur "
+					labelStyleClass="table-labels" value="#{visit.prenomVisiteur}" />
+				<b:dataTableColumn label="Hote " labelStyleClass="table-labels"
+					value="#{visit.hote}" />
+				<b:dataTableColumn label="Contact " labelStyleClass="table-labels"
+					value="#{visit.contact}" />
+				<b:dataTableColumn label="Date Visite"
+					labelStyleClass="table-labels" value="#{visit.dateVisite}" />
+				<b:dataTableColumn label="Etat" labelStyleClass="table-labels"
+					value="#{visit.etat}" />
+				<b:dataTableColumn label="Editer" style="text-align:center; color:#2E9CCA; " orderable="false"
+					
+					contentStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_AGENT') ? 'hidden': null}"
+					headerStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_AGENT')? 'hidden': null}" >
+					<b:commandButton oncomplete="PF('editVisitDialog').show()"
+						look="primary" iconAwesome="edit"
+						disabled="#{visit.etat ne 'En Attente'}">
+
+						<f:setPropertyActionListener value="#{visit}"
+							target="#{visitsView.selectedVisit}" />
+						<f:ajax execute="@this" render="@form" />
+					</b:commandButton>
+				</b:dataTableColumn>
+				<b:dataTableColumn label="Valider" style="text-align:center; color:#2E9CCA; " orderable="false"
+					
+					contentStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE') ? 'hidden': null}"
+					headerStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')? 'hidden': null}">
+					<b:commandButton action="#{visitsView.validateVisit(visit)}"
+						immediate="true" look="primary" iconAwesome="check"
+						disabled="#{visit.etat ne 'En Attente'}">
+
+						<f:ajax execute="@this" render="@form" />
+					</b:commandButton>
+				</b:dataTableColumn>
+				<b:dataTableColumn label="Check-in" style="text-align:center; color:#2E9CCA; " orderable="false"
+					
+					contentStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RECEPTIONISTE') ? 'hidden': null}"
+					headerStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RECEPTIONISTE')? 'hidden': null}">
+					<b:commandButton action="#{visitsView.checkinVisit(visit)}"
+						immediate="true" update="@form" look="primary"
+						iconAwesome="arrow-circle-right"
+						disabled="#{visit.etat ne 'En Attente'}">
+
+					</b:commandButton>
+				</b:dataTableColumn>
+				<b:dataTableColumn label="Terminer Securite"
+					style="text-align:center; color:#2E9CCA; " orderable="false"
+					contentStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_AGENT') ? 'hidden': null}"
+					headerStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_AGENT')? 'hidden': null}">
+					<b:commandButton action="#{visitsView.terminerVisit(visit)}"
+						title="Terminer sécurité" immediate="true" update="@form"
+						rendered="#{sec:areAnyGranted('ROLE_SUPERVISEUR, ROLE_AGENT')}"
+						look="primary" iconAwesome="arrow-circle-left"
+						disabled="#{visit.etat ne 'Terminée hote'}">
+
+					</b:commandButton>
+				</b:dataTableColumn>
+
+				<b:dataTableColumn label="Terminer Hote" style="text-align:center; color:#2E9CCA; " orderable="false"
+					
+					contentStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE') ? 'hidden': null}"
+					headerStyleClass="#{sec:areNotGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')? 'hidden': null}">
+					<b:commandButton action="#{visitsView.terminerVisitManager(visit)}"
+						title="Terminer hôte" look="primary"
+						iconAwesome="arrow-circle-left" immediate="true" update="@form"
+						rendered="#{sec:areAnyGranted('ROLE_SUPERVISEUR, ROLE_RESPONSABLE')}"
+						disabled="#{visit.etat ne 'En Cours'}">
+
+					</b:commandButton>
+				</b:dataTableColumn>
+
+				<b:dataTableColumn label="Voir Détail" style="text-align:center; color:#2E9CCA; " orderable="false"
+					>
+					<b:commandButton actionListener="#{visitsView.selectVisit(visit)}"
+						immediate="true" oncomplete="PF('showVisitDialog').show()"
+						look="primary" iconAwesome="eye">
+
+						<f:ajax execute="@this" render="@form" />
+					</b:commandButton>
+
+				</b:dataTableColumn>
+
+			</b:dataTable>
+
+			<p:dialog header="Modifier visite" widgetVar="editVisitDialog"
+				resizable="true" responsive="true" styleClass="popup-dialog">
+
+				<p:panelGrid style="margin-bottom:20px; border: none !important; ">
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="numPiece" value="Numéro Pièce :"
+								styleClass="titleLabel" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputText id="numPiece"
+								value="#{visitsView.selectedVisit.numPiece}" required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !" 
+								converter-message="Format valeur incorrect: Vous devez saisir des chiffres">
+						<f:convertNumber integerOnly="true" />
+					</p:inputText>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message for="numPiece" />
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="type" value="Type Pièce :"
+								styleClass="titleLabel" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:selectOneMenu id="type" required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !"
+								value="#{visitsView.selectedVisit.typePiece}">
+								<f:selectItem itemLabel="Carte Nationale"
+									itemValue="Carte Nationale" />
+								<f:selectItem itemLabel="Permis de Conduire"
+									itemValue="Permis de Conduire" />
+								<f:selectItem itemLabel="Passeport" itemValue="Passeport" />
+								<f:selectItem itemLabel="Carte Professionnelle"
+									itemValue="Carte Professionnelle" />
+							</p:selectOneMenu>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message for="type" />
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="visitorName" value="Nom Visiteur :"
+								styleClass="titleLabel" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputText id="visitorName"
+								value="#{visitsView.selectedVisit.nomVisiteur}"
+								label="Nom Visiteur :" required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !"
+								validatorMessage="Le nom entré ne correspond pas au format suivant: AAA AAA ou AAA-AAA ou AAA'AAA ">
+								<f:ajax event="blur" render="nomMessage" />
+								<f:validateRegex
+									pattern="^[A-ZÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ]+[\ \-\']?[A-ZÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ]+$" />
+							</p:inputText>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message id="nomMessage" for="visitorName" />
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="visitorFirstname" value="Prenom Visiteur :"
+								styleClass="titleLabel" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputText id="visitorFirstname"
+								value="#{visitsView.selectedVisit.prenomVisiteur}"
+								required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !"
+								validatorMessage="Le prenom entré ne correspond pas au format suivant: Aaa aaa ou Aaa-aaa ou Xaa'aaa ">
+								<f:ajax event="blur" render="prenomMessage" />
+								<f:validateRegex
+									pattern="^[A-Z]{1}[a-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ]+[\ \-\']?[a-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿA-Z]+$" />
+							</p:inputText>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message id="prenomMessage" for="visitorFirstname" />
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="function" value="Fonction :"
+								styleClass="titleLabel" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputText id="function"
+								value="#{visitsView.selectedVisit.fonction}" />
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message for="function"></p:message>
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="from" value="De la part de :"
+								styleClass="titleLabel" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputText id="from"
+								value="#{visitsView.selectedVisit.deLaPart}">
+								<f:validator validatorId="dz.cerist.drx.validator.NameValidator" />
+							</p:inputText>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message for="from"></p:message>
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="accompany" value="Accompagnants:"
+								styleClass="titleLabel" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputTextarea id="accompany"
+								value="#{visitsView.selectedVisit.accompagnants}" />
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message for="accompany"></p:message>
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="hote" value="Hôte :" styleClass="titleLabel" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:selectOneMenu id="hote"
+								value="#{visitsView.selectedVisit.hote}" required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !">
+								<f:selectItem itemLabel="Ministre" itemValue="Ministre" />
+								<f:selectItem itemLabel="Chef de Cabine"
+									itemValue="Chef de Cabine" />
+								<f:selectItem itemLabel="Secrétaire Général"
+									itemValue="Secrétaire Général" />
+								<f:selectItem itemLabel="Chef Inspection"
+									itemValue="Chef Inspection" />
+							</p:selectOneMenu>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message for="hote"></p:message>
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="contact" value="Contact :"
+								styleClass="titleLabel" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputText id="contact"
+								value="#{visitsView.selectedVisit.contact}" required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !">
+								<f:validator validatorId="dz.cerist.drx.validator.NameValidator" />
+							</p:inputText>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message for="contact"></p:message>
+						</p:column>
+					</p:row>
+					<p:row style="border: none !important; ">
+						<p:column colspan="3" style="border: none !important; ">
+							<p:outputLabel for="badge" value="Numéro de badge :"
+								styleClass="titleLabel" />
+						</p:column>
+						<p:column colspan="3" style="border: none !important; ">
+							<p:inputText id="badge"
+								value="#{visitsView.selectedVisit.numBadge}" required="true"
+								required-message="Champ obligatoire :Vous devez indiquez une valeur !" 
+								converter-message="Format valeur incorrect: Vous devez saisir des chiffres">
+						<f:convertNumber integerOnly="true" />
+					</p:inputText>
+						</p:column>
+						<p:column colspan="6" style="border: none !important; ">
+							<p:message for="badge"></p:message>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+				<f:facet name="footer">
+					<p:row style="border: none !important; ">
+						<p:column colspan="4" style="border: none !important;">
+							<p:commandButton action="#{visitsView.updateVisit()}"
+								update="@form" value="Enregistrer"
+								style=" margin-right: 10px ; margin-left: 200px"
+								oncomplete="closeDlg(xhr, status, args)" />
+						</p:column>
+						<p:column colspan="4" style="border: none !important;  ">
+							<p:button value="Annuler" dismiss="modal"
+								onclick="PF('editVisitDialog').hide()" />
+						</p:column>
+					</p:row>
+				</f:facet>
+			</p:dialog>
+
+			<p:dialog header="Aperçu Visite" widgetVar="showVisitDialog"
+				 resizable="false" responsive="true"
+				 style=" width:400px !important ; min-width:300px !important;  min-Y:70px !important; " >
+				<p:scrollPanel
+					style=" width: 100% !important; height: 200px !important; border: none !important; ">
+					<p:panelGrid style="margin-bottom:20px; border: none !important; ">
+
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Numéro Pièce :" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{visitsView.selectedVisit.numPiece}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Type Pièce :" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{visitsView.selectedVisit.typePiece}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Nom Visiteur :" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{visitsView.selectedVisit.nomVisiteur}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Prenom Visiteur :" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel
+									value="#{visitsView.selectedVisit.prenomVisiteur}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Phone :" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{visitsView.selectedVisit.phone}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Organisme :" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{visitsView.selectedVisit.organisme}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Fonction :" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{visitsView.selectedVisit.fonction}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Numéro de badge :" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{visitsView.selectedVisit.numBadge}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="De la part de :" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{visitsView.selectedVisit.deLaPart}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Hôte :" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{visitsView.selectedVisit.hote}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Contact :" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{visitsView.selectedVisit.contact}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Accompagnants:" styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{visitsView.selectedVisit.accompagnants}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel for="about2" value="#{msg.about} :"
+									styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel id="about2"
+									value="#{visitsView.selectedVisit.motif}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Date de la visite :"
+									styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{visitsView.selectedVisit.dateVisite}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Heure 1er check-in :"
+									styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{visitsView.selectedVisit.firstChecking}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Heure 2éme check-in :"
+									styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel
+									value="#{visitsView.selectedVisit.secondChecking}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Heure 1er check-out :"
+									styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="#{visitsView.selectedVisit.firstCheckout}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+
+						<p:row style="border: none !important; ">
+							<p:column colspan="4" style="border: none !important; ">
+
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel value="Heure 2éme check-out :"
+									styleClass="titleLabel" />
+							</p:column>
+							<p:column colspan="3" style="border: none !important; ">
+								<p:outputLabel
+									value="#{visitsView.selectedVisit.secondCheckout}" />
+							</p:column>
+							<p:column colspan="2" style="border: none !important; ">
+
+							</p:column>
+						</p:row>
+
+					</p:panelGrid>
+				</p:scrollPanel>
+				<f:facet name="footer">
+					<p:row style="border: none !important; ">
+						<p:column colspan="12" style="border: none !important;">
+							<p:button value="Fermer"  dismiss="modal" style="margin-left: 140px"
+								onclick="PF('showVisitDialog').hide()" />
+						</p:column>
+					</p:row>
+				</f:facet>
+			</p:dialog>
+
+		</b:form>
+		<script type="text/javascript">
+    function closeDlg(xhr, status, args) {
+        if(args.validationFailed ) {
+            PF('editVisitDialog').jq.effect("shake", {times:5}, 0);
+        }
+        else {
+            PF('editVisitDialog').hide();
+        }
+    }
+</script>
+
+
+	</ui:define>
+</ui:composition>

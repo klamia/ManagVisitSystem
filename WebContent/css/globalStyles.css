@@ -1,0 +1,48 @@
+@CHARSET "UTF-8";
+/****************************************************************************************/
+/***************************** CSS of home.xhtml*****************************************/
+/****************************************************************************************/
+.table-labels{
+	color:#464866;
+}
+
+.table th{
+	text-align:center;
+}
+
+.btn-default{
+	 color: #fff;
+    background-color: #464866;
+    border-color: #25274D;
+}
+
+table.dataTable td.dataTables_empty, table.dataTable th.dataTables_empty{
+	height:20em !important;
+}
+
+.title-panel{
+	color:#fff;
+	background-color:#2E9CCA;
+}
+
+.titleLabel{
+	color:#2E9CCA;
+}
+.standBy{
+	background-color:#F0F8FF  !important;
+	}
+	
+.onProcess{
+	background-color:#87CEFA !important;
+	}
+.accepted{
+	background-color:#E6E6FA !important;
+	}
+
+@media screen and (min-width: 767px) {
+	.popup-dialog{
+	min-width:600px;
+	}
+	
+	
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/WEB-INF/templates/publicTemplate.xhtml"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui"
+	xmlns:pretty="http://ocpsoft.com/prettyfaces">
+
+	<ui:define name="box-content">
+
+		<b:form horizontal="true">
+			
+			<b:selectOneMenu value="#{localeBean.language}" colMd="12"
+				required="true" onchange="this.form.submit()" immediate="true">
+				<f:facet name="prepend">
+					<i class="fa fa-language" />
+				</f:facet>
+				<f:selectItems value="#{localeBean.locales}" />
+			</b:selectOneMenu>
+		</b:form>
+		<b:form horizontal="true" prependId="false" >
+			
+			<b:messages/>
+			<b:inputText id="j_username" name="j_username" placeholder="#{msg.username}"
+			 required="true" colMd="12" value="#{loginBean.username}"    >
+				<f:facet name="prepend">
+					<b:icon name="user" />
+				</f:facet>
+				<b:focus rendered="true" />
+			</b:inputText>
+			
+			<b:inputSecret id="j_password" name="j_password"  value="#{loginBean.password}"
+				placeholder="#{msg.password}" colMd="12">
+				<f:facet name="prepend">
+					<b:iconAwesome name="key" />
+				</f:facet>
+			</b:inputSecret>
+			<b:row>
+				<b:link value="Nouveau compte" col-md="4" col-sm="4" col-xs="12"
+					styleClass="linkBtn" outcome="subscribe" />
+				<b:link value="#{msg.forgotPwd}?" col-md="4" col-sm="4" col-xs="12"
+					styleClass="linkBtn" outcome="forgotPassword"/>
+				<b:commandButton value="OK" col-md="4" col-sm="4" col-xs="12"
+					action="#{loginBean.login}"  />
+			</b:row>
+		</b:form>
+	</ui:define>
+</ui:composition>

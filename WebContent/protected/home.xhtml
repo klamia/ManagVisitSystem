@@ -1,0 +1,18 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    template="/WEB-INF/templates/template.xhtml"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pretty="http://ocpsoft.com/prettyfaces">
+
+<ui:define name="styleCss">
+<link rel="stylesheet" type="text/css" href="#{request.contextPath}/css/globalStyles.css"/>
+</ui:define>
+<ui:define name="title">Home</ui:define>
+<ui:define name="content">
+   <b:image small-screen="one-third" value="/images/VMS.png"   style="width: 100%;" />
+</ui:define>
+</ui:composition>
